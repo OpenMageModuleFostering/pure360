@@ -2,7 +2,7 @@
 <config>
 	<modules>
 		<Pure360_Common>
-			<version>1.1.2</version>
+			<version>1.1.4</version>
 		</Pure360_Common>
 	</modules>
 	<global>
@@ -97,15 +97,15 @@
 		</layout>
 	</adminhtml>
 	<admin>
-    <routers>            
-        <adminhtml>
-            <args>
-                <modules>
-                    <pure360_common after="Mage_Adminhtml">Pure360_Common_Adminhtml</pure360_common>
-                </modules>
-            </args>
-        </adminhtml>            
-    </routers>
+		<routers>
+			<pure360_common>
+				<use>admin</use>
+				<args>
+					<module>Pure360_Common</module>
+					<frontName>pure360</frontName>
+				</args>
+			</pure360_common>
+		</routers>
 	</admin>
 	<default>
 		<pure360>

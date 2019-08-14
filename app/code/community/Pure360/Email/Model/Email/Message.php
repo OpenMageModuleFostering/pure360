@@ -167,28 +167,15 @@ class Pure360_Email_Model_Email_Message extends Mage_Core_Model_Email_Template
 			$client				= Mage::helper('pure360_common/api')->getClient($url, $username, $password);
 			
 			$context = $client->getcontext();
-			$messageSubject		= $this->getProcessedTemplateSubject($variables);
-
-			if (strpos($context["defaultLanguage"],'UTF-8') !== false )
+			if (strpos($context["defaultLanguage"],'UTF-8') !== false)
 			{
-				// check if $text is already UTF-8 encoded
-				if (utf8_encode(utf8_decode($text)) !== $text){
-					$text			= utf8_encode($text);
-				}
-				
-				// check if $plainText is already UTF-8 encoded
-				if (utf8_encode(utf8_decode($plainText)) !== $plainText){
-					$plainText		= utf8_encode($plainText);
-				}
-				
-				// check if $messageSubject is already UTF-8 encoded
-				if (utf8_encode(utf8_decode($messageSubject)) !== $messageSubject){
-					$messageSubject	= utf8_encode($messageSubject);
-				}
+				$text		= utf8_encode($text);
+				$plainText	= utf8_encode($plainText);
 			}
 
 			// Send using Pure360 One2One
 			// Todo: allow modification of the plain text message. Currently, only stripping the tags out of the HTML message.
+			$messageSubject		= $this->getProcessedTemplateSubject($variables);
 			$messageName		= $templateId;
 			$messageBodyHtml	= $this->isPlain() ? null : $text; 
 			$messageBodyPlain	= $this->isPlain() ? $text : $plainText;

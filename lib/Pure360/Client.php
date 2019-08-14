@@ -131,46 +131,48 @@ class Pure360_Client
 		{
 			throw new Exception('[Pure360] Could not connect to host: '.$class.'::'.$process.' '. $e->getMessage());
 		}
-		try {
-			// Validate response
-			if (isset($response['result']))
-			{
-				switch ($response["result"])
-				{
-					case "success":
-						if (!empty($response["resultData"]))
-						{
-							$results = $response["resultData"];
-						} else
-						{
-							$results = array();
-						}
-						break;
-
-					case "bean_exception_validation":
-
-						throw new Pure360_Exception_ValidationException($response["resultData"]);
-
-					case "bean_exception_security":
-
-						throw new Pure360_Exception_SecurityException($response["resultData"]);
-
-					case "bean_exception_system":
-
-						throw new Pure360_Exception_SystemException($response["resultData"]);
-
-					default:
-
-						throw new Exception("[Pure360] Unhandled exception");
-				}
-			
-			} else
-			{
-				throw new Exception("[Pure360] Invalid api response.");
-			}
-		} catch (Exception $e)
+		
+		// Validate response
+		if (isset($response['result']))
 		{
-			Mage::helper('pure360_list')->writeError("Client - ".$e->getMessage());
+			switch ($response["result"])
+			{
+				case "success":
+					if (!empty($response["resultData"]))
+					{
+						$results = $response["resultData"];
+					} else
+					{
+						$results = array();
+					}
+					break;
+
+				case "bean_exception_validation":
+					if (!empty($response["resultData"]))
+					{
+						$results = $response["resultData"];
+					} else
+					{
+						$results = array();
+					}
+					throw new Pure360_Exception_ValidationException($response["resultData"]);
+
+				case "bean_exception_security":
+					
+					throw new Pure360_Exception_SecurityException($response["resultData"]);
+
+				case "bean_exception_system":
+					
+					throw new Pure360_Exception_SystemException($response["resultData"]);
+
+				default:
+					
+					throw new Exception("[Pure360] Unhandled exception");
+			}
+			
+		} else
+		{
+			throw new Exception("[Pure360] Invalid api response.");
 		}
 
 		// Save request and response

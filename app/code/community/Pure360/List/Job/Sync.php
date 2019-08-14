@@ -860,18 +860,22 @@ class Pure360_List_Job_Sync extends Pure360_Cron_Job_Abstract
 				$attribute = 'pure360_sync_status';
 				$attributeId = $model->getAttributeId('customer', $attribute);
 
-				$sql = "DELETE at_pure360_sync_status FROM $customerEntityTable AS e
-						LEFT JOIN $customerEntityIntTable AS at_pure360_sync_status ON (at_pure360_sync_status.entity_id = e.entity_id)  
-						WHERE (at_pure360_sync_status.attribute_id = $attributeId) 
-						AND e.entity_id IN(" . implode(',', $ids) . ")";
+				if(!empty($ids))
+				{
+				
+					$sql = "DELETE at_pure360_sync_status FROM $customerEntityTable AS e
+							LEFT JOIN $customerEntityIntTable AS at_pure360_sync_status ON (at_pure360_sync_status.entity_id = e.entity_id)  
+							WHERE (at_pure360_sync_status.attribute_id = $attributeId) 
+							AND e.entity_id IN(" . implode(',', $ids) . ")";
 
-				$write->query($sql);
+					$write->query($sql);
 
-				$sql = "INSERT INTO $customerEntityIntTable(entity_type_id, attribute_id, entity_id, value)
-						SELECT 1,$attributeId, e.entity_id, 1 FROM $customerEntityTable AS e
-						WHERE e.entity_id IN(" . implode(',', $ids) . ")";
+					$sql = "INSERT INTO $customerEntityIntTable(entity_type_id, attribute_id, entity_id, value)
+							SELECT 1,$attributeId, e.entity_id, 1 FROM $customerEntityTable AS e
+							WHERE e.entity_id IN(" . implode(',', $ids) . ")";
 
-				$write->query($sql);
+					$write->query($sql);
+				}
 			}
 
 			if($count >= $list->rows)
