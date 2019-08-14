@@ -3,7 +3,7 @@
 /**
  * @package   Pure360\List
  * @copyright 2013 Pure360.com
- * @version   1.0.0
+ * @version   1.0.1
  * @author    Stewart Waller <stewart.waller@pure360.com>
  */
 class Pure360_List_AjaxController extends Mage_Adminhtml_Controller_Action

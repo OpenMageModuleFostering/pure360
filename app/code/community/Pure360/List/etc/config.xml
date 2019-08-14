@@ -2,7 +2,7 @@
 <config>
 	<modules>
 		<Pure360_List>
-			<version>1.0.0</version>
+			<version>1.0.1</version>
 		</Pure360_List>
 	</modules>
 	<global>
