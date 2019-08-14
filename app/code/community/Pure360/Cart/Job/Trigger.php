@@ -242,6 +242,8 @@ class Pure360_Cart_Job_Trigger extends Pure360_Cron_Job_Abstract
 				WHERE entity_id = $entityId
 				AND is_active = 1";
 
-		$write->query($sql);
+        Mage::helper('pure360_cart')->writeDebug(__METHOD__ . " - $sql");
+
+        $write->query($sql);
 	}
 }

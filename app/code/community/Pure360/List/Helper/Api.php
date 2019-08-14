@@ -189,7 +189,8 @@ class Pure360_List_Helper_Api extends Pure360_Common_Helper_Api
 	{
 		Mage::helper('pure360_list')->writeDebug(__METHOD__ . ' - start');
 
-		$listData = array();
+		$listData	= array();
+		$status		= null;
 		
 		// Search to see if a lists already exists with this name
 		$searchOutput = $client->campaign->marketingList->_search(array("listName" => $listName));
@@ -335,7 +336,7 @@ class Pure360_List_Helper_Api extends Pure360_Common_Helper_Api
 		{
 			$domain = Mage::helper('pure360_common')->getModuleGroupKeyValue('pure360', 'settings', 'api_url');
 		}
-		$domain = str_replace("http://", "", $domain);
+		//$domain = str_replace("http://", "", $domain);
 
 		$successTrackingToken = $list->getSuccessTrackingToken();
 		$successTrackingToken = empty($successTrackingToken) ? 'magento' : $successTrackingToken;
@@ -354,7 +355,7 @@ class Pure360_List_Helper_Api extends Pure360_Common_Helper_Api
 
 		$curl = curl_init();
 
-		curl_setopt($curl, CURLOPT_URL, 'http://' . $domain . '/_act/tracking.php');
+        curl_setopt($curl, CURLOPT_URL, $domain . '/_act/tracking.php');
 		curl_setopt($curl, CURLOPT_HEADER, false);
 		curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
 		curl_setopt($curl, CURLOPT_POSTFIELDS, $postfields);

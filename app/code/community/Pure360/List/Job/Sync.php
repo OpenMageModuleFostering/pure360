@@ -774,19 +774,25 @@ class Pure360_List_Job_Sync extends Pure360_Cron_Job_Abstract
 
 				// Update Sync Statuses.
 				$optoutTable = $resource->getTableName('pure360_optout');
-				$stmt = $write->prepare("DELETE FROM $optoutTable WHERE `email` = :email AND `scope` = :scope AND `scope_id` = :scopeId ");
 				$email = null;
-				$stmt->bindParam(":email", $email, PDO::PARAM_STR);
-				$stmt->bindParam(":scope", $list->getScope(), PDO::PARAM_STR);
-				$stmt->bindParam(":scopeId", $list->getScopeId(), PDO::PARAM_INT);
-				
-				foreach($emails as $email)
+			
+				foreach($emails as $emailKey => $email)
 				{
-					if(!empty($email))
+					if(empty($email))
 					{
-						$stmt->execute();
+						unset($emails[$emailKey]);
+						
+					} else
+					{
+						$emails[$emailKey] = addslashes($email);
 					}
 				}
+				$sql = "DELETE FROM $optoutTable 
+						WHERE `email` IN ('".implode("','",$emails)."') 
+						AND `scope` = '".addslashes($list->getScope())."' 
+						AND `scope_id` = '".addslashes($list->getScopeId())."' ";
+				$write->query($sql);
+				
 			// Mark subscribers as synced	
 			} else if(strstr($filename, 'subscribe'))
 			{

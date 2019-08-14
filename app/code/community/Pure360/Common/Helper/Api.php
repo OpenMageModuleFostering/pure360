@@ -82,15 +82,32 @@ class Pure360_Common_Helper_Api extends Mage_Core_Helper_Abstract
 	}
 
 	/**
-	 * 
+	 * Generate the WSDL url, replacing the response domain with paint if needed
+     *
+     *
 	 * @param type $url
 	 * @return string
 	 */
 	public function getWsdl($url)
 	{
-		$domain = str_replace("http://", "", $url);
-		$paint_domain = str_replace("response", "paint", $domain);
-		$wsdl = "http://" . $paint_domain . '/' . $paint_domain . '/ctrlPaintLiteral.wsdl';
+        $urlParts = parse_url($url);
+        $defaults = array(
+            'host' => '',
+            'scheme' => 'http',
+            'wsdl' => 'ctrlPaintLiteral.wsdl'
+        );
+
+        if (array_key_exists('host', $urlParts))
+        {
+            $domainParts = explode('.', $urlParts['host']);
+            $paintDomain = preg_replace('/^response$/i', 'paint', $domainParts, 1);
+            $host = implode('.', $paintDomain);
+            $urlParts['host'] = $host;
+        }
+        // Add any defaults
+        $urlParts = array_merge($defaults, $urlParts);
+        // Create the path to the WSDL using the correct Scheme and Host
+        $wsdl = "${urlParts['scheme']}://${urlParts['host']}/${urlParts['host']}/${urlParts['wsdl']}";
 
 		return $wsdl;
 	}
@@ -163,10 +180,11 @@ class Pure360_Common_Helper_Api extends Mage_Core_Helper_Abstract
 		curl_setopt($curl, CURLOPT_POSTFIELDS, $postFields);
 
 		$res = curl_exec($curl);
+        $info = curl_getinfo($curl);
+        Mage::helper('pure360_common')->writeDebug("Res: " . $res);
+        Mage::helper('pure360_common')->writeDebug("Info: " . print_r($info, true));
 
-		Mage::helper('pure360_common')->writeDebug($res);
-
-		curl_close($curl);
+        curl_close($curl);
 	}
 
 }

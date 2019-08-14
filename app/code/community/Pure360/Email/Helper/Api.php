@@ -85,7 +85,9 @@ class Pure360_Email_Helper_Api extends Pure360_Common_Helper_Api
 			'message_bodyHtml'		=> $messageBodyHtml,
 			'message_bodyPlain'		=> $messageBodyPlain);
 
-		if($fromDesc) 
+        Mage::helper('pure360_email')->writeDebug(__METHOD__ . ' - ' . print_r($inputData, true));
+
+        if($fromDesc)
 		{
 	//		$inputData['customFromDesc']	= $fromDesc;
 		}

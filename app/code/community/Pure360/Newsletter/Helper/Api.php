@@ -24,10 +24,10 @@ class Pure360_Newsletter_Helper_Api extends Pure360_Common_Helper_Api
 		{
 			$domain = Mage::helper('pure360_common')->getModuleGroupKeyValue('pure360', 'settings', 'api_url');
 		}
-		$domain = str_replace("http://", "", $domain);
+		//$domain = str_replace("http://", "", $domain);
 
 		// Build url
-		$url = 'http://' . $domain . '/interface/list.php';
+		$url = $domain . '/interface/list.php';
 
 		// Get store and webste ids
 		$storeId	= $subscriber->getStoreId();
@@ -91,10 +91,10 @@ class Pure360_Newsletter_Helper_Api extends Pure360_Common_Helper_Api
 		{
 			$domain = Mage::helper('pure360_common')->getModuleGroupKeyValue('pure360', 'settings', 'api_url');
 		}
-		$domain = str_replace("http://", "", $domain);
+		//$domain = str_replace("http://", "", $domain);
 
 		// Build url
-		$url = 'http://' . $domain . '/interface/list.php';
+		$url = $domain . '/interface/list.php';
 
 		// Get store and webste ids
 		$storeId = $customer->getStoreId();
