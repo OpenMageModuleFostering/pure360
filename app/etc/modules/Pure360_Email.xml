@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Pure360_Email>
+            <active>true</active>
+            <codePool>community</codePool>
+            <depends>
+                <Pure360_Common/>
+            </depends>
+        </Pure360_Email>
+    </modules>
+</config>

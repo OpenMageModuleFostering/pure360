@@ -1,0 +1,16 @@
+<?php
+	$scope = Mage::helper('pure360_common')->getScope();
+	$scopeId = Mage::helper('pure360_common')->getScopeId();
+?>
+<script type="text/javascript">
+
+	//<![CDATA[
+    function initPure360() 
+	{
+		pure360 = new Pure360(
+			'<?php echo $scope; ?>',
+			'<?php echo $this->getUrl('pure360_common/ajax/validate'); ?>');
+	}
+	//]]>
+</script>
+

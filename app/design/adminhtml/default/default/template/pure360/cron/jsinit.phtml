@@ -1,0 +1,23 @@
+<?php
+	$scope = Mage::helper('pure360_common')->getScope();
+	$scopeId = Mage::helper('pure360_common')->getScopeId();
+?>
+<script type="text/javascript">
+	//<![CDATA[
+    function initPure360Cron() 
+	{
+		pure360Cron = new Pure360Cron(
+			'<?php echo $scope; ?>',
+			'<?php echo $scopeId; ?>',
+			'<?php echo $this->getUrl('pure360_cron/Ajax/update'); ?>',
+			'<?php echo $this->getUrl('pure360_cron/Ajax/list'); ?>',
+			'<?php echo $this->getUrl('pure360_cron/Ajax/force'); ?>',
+			'<?php echo $this->getUrl('pure360_cron/Ajax/pause'); ?>',
+			'<?php echo $this->getUrl('pure360_cron/Ajax/resume'); ?>',
+			'<?php echo $this->getUrl('pure360_cron/Ajax/download'); ?>',
+			'<?php echo $this->getUrl('pure360_cron/Ajax/clean'); ?>');
+	}
+	
+	//]]>
+</script>
+

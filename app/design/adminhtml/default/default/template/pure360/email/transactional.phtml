@@ -1,0 +1,70 @@
+<?php if ($this->transactionalProfileEnabled) : ?>
+
+<?php 
+	$transactionals = $this->getTransactionals();
+
+	if($transactionals && false) : ?>
+
+	<div id="pure360_email_transactional_container">
+		<div id="pure360_email_transactional_options" class="entry-edit">
+			<div class="entry-edit-head">
+				<h4 class="icon-head head-edit-form fieldset-legend"><?php echo Mage::helper('pure360_email')->__('Transactional Email Mapping') ?></h4>
+			</div>
+			<fieldset name="pure360_email_transactional">
+				<legend><?php echo Mage::helper('pure360_email')->__('Transactional Email Mapping') ?></legend>
+				<table id="mapping_table" class="form-list" cellspacing="0">
+					<colgroup class="label"></colgroup>
+					<colgroup class="value"></colgroup>
+					<colgroup class="scope-label"></colgroup>
+					<colgroup class=""></colgroup>
+					<tbody>
+
+						<?php if (!$transactionals->getSize()) : ?>
+
+							<tr class="addMappingRow">
+								<td class="label"><label></label></td>
+								<td class="value">
+									<select name="pure360_email_template_ids[]" class="select">
+										<?php echo $this->getTemplates(); ?>
+									</select> 
+								</td>
+								<td class="value">
+									<select name="pure360_email_message_ids[]" class="select">
+										<?php echo $this->getMessages(); ?>
+									</select>
+								</td>
+							</tr>
+							
+						<?php else : ?>
+
+							<?php foreach ($transactionals as $transactional) : ?>
+
+								<tr class="addMappingRow">
+									<td class="label"><label></label></td>
+									<td class="value">
+										<select name="pure360_email_template_ids[]" class="select">
+											<?php echo $this->getTemplates($transactional->getTemplateId()); ?>
+										</select> 
+									</td>
+									<td class="value">
+										<select name="pure360_email_message_ids[]" class="select">
+											<?php echo $this->getMessages($transactional->getMessageId()); ?>
+										</select>
+									</td>
+								</tr>
+
+							<?php endforeach; ?>
+								
+						<?php endif; ?>
+
+						<tr class="addButtonRow">
+							<td colspan="3"><button onclick="pure360Email.addMapping()" class="scalable save right" style="margin: 10px; margin-right: 25px;" type="button" >Add new</button></td>
+						</tr>
+					</tbody>
+				</table>
+			</fieldset>
+		</div>
+	</div>
+<?php endif; ?>
+
+<?php endif; ?>

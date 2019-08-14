@@ -1,0 +1,42 @@
+<div class="entry-edit pure360_module_list">
+	<div class="entry-edit-head">
+        <h4 class="icon-head head-edit-form fieldset-legend"><?php echo Mage::helper('pure360_common')->__('Activate Modules') ?></h4>
+    </div>
+	<!-- define the toggle function -->
+	<script language="javascript">
+		function toggleState(item) {
+			if (item.className == "on") {
+				item.className = "off";
+				item.innerHTML = "Off"
+			} else {
+				item.className = "on";
+				item.innerHTML = "On"
+			}
+			return false;
+		}
+	</script>
+    <fieldset name="pure360_module_list" class="config collapseable">
+		<table class="form-list">
+			<colgroup class="label"></colgroup>
+			<colgroup class="label"></colgroup>
+			<colgroup class="label"></colgroup>
+			<tbody>
+				<tr>
+					<th class="label"></th>
+					<th class="value"></th>
+					<th class="value"></th>
+				</tr>
+				<?php foreach($this->getModuleList() as $moduleName => $module) { ?>
+					<tr>
+						<td class="label"><?php echo $moduleName; ?></td>
+						<td class="value">
+							<button class="off" onclick="toggleState(this)">Off</span>
+						</td>
+						<td class="value">
+						</td>
+					</tr>
+				<?php } ?>
+			</tbody>
+		</table>
+	</fieldset>
+</div>

@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<layout>
+    <adminhtml_system_config_edit>
+        <reference name="content">
+            <block type="pure360_list/jsinit" name="pure360_list_jsinit"  template="pure360/list/jsinit.phtml"></block>
+        </reference>
+    </adminhtml_system_config_edit>  
+
+	<pure360_list>
+        <reference name="content">
+            <block type="pure360_list/adminhtml_system_config_list" name="pure360_list"  template="pure360/list/list.phtml"></block>
+        </reference>
+    </pure360_list>
+
+</layout>

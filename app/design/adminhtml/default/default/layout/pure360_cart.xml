@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<layout>
+    <adminhtml_system_config_edit>
+        <reference name="content">
+            <block type="pure360_cart/jsinit" name="pure360_cart_jsinit"  template="pure360/cart/jsinit.phtml"></block>
+        </reference>
+    </adminhtml_system_config_edit>
+</layout>

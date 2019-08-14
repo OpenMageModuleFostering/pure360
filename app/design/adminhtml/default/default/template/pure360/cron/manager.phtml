@@ -1,0 +1,21 @@
+<div id="pure360_cron_manager" class="entry-edit">
+	<div class="entry-edit-head">
+        <h4 class="icon-head head-edit-form fieldset-legend"><?php echo Mage::helper('pure360_cron')->__('Job Table') ?></h4>
+    </div>
+	<fieldset name="pure360_cron_manager">
+        <legend><?php echo Mage::helper('pure360_cron')->__('Job Table') ?></legend>
+		<?php echo $this->getChildHtml('grid') ?>
+	</fieldset>
+</div>
+
+<?php if($this->showLogs()) : ?>
+<div id="pure360_log_manager" class="entry-edit">
+	<div class="entry-edit-head">
+        <h4 class="icon-head head-edit-form fieldset-legend"><?php echo Mage::helper('pure360_cron')->__('Pure360 Logs') ?></h4>
+    </div>
+	<fieldset name="pure360_log_manager">
+        <legend><?php echo Mage::helper('pure360_cron')->__('Log Table') ?></legend>
+		<?php echo $this->getChildHtml('logs') ?>
+	</fieldset>
+</div>
+<?php endif; ?>

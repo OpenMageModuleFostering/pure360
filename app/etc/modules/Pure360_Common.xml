@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Pure360_Common>
+            <active>true</active>
+            <codePool>community</codePool>
+            <depends>
+                <Mage_Adminhtml/>
+                <Mage_Customer/>
+                <Mage_Checkout/>
+                <Mage_Sales/>
+            </depends>
+        </Pure360_Common>
+    </modules>
+</config>

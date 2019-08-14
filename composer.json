@@ -1,0 +1,16 @@
+{
+    "name": "OpenMageModuleFostering/Pure360",
+    "type": "magento-module",
+    "license": "Open-Software-License",
+    "homepage": "",
+    "description": "Integrate with Pure360 and create email campaigns that maximise the life time value of your customers",
+    "authors": [
+    {
+        "name": "Stewart Waller",
+        "email": "stewart.waller@pure360.com"
+    }
+],
+    "suggest": {
+        "magento-hackathon/magento-composer-installer": "*"
+    }
+}

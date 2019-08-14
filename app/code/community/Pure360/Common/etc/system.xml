@@ -1,0 +1,451 @@
+<?xml version="1.0"?>
+<config>
+	<tabs>
+		<pure360 module="pure360_common">
+			<label>Pure360</label>
+			<sort_order>100</sort_order>
+		</pure360>
+	</tabs>
+	<sections>
+		<pure360 module="pure360_common">
+			<label>API Config</label>
+			<tab>pure360</tab>
+			<frontend_type>text</frontend_type>
+			<sort_order>100</sort_order>
+			<show_in_default>1</show_in_default>
+			<show_in_website>1</show_in_website>
+			<show_in_store>1</show_in_store>
+			<groups>
+				<about>
+					<frontend_type>text</frontend_type>
+					<frontend_model>pure360_common/adminhtml_system_config_about</frontend_model>
+					<sort_order>0</sort_order>
+					<show_in_default>1</show_in_default>
+					<show_in_website>1</show_in_website>
+					<show_in_store>1</show_in_store>
+				</about>
+
+			<!-- Default -->
+				<default_settings translate="label">
+					<label>Settings</label>
+					<frontend_type>text</frontend_type>
+					<sort_order>1</sort_order>
+					<show_in_default>1</show_in_default>
+					<expanded>1</expanded>
+					<fields>
+						<enabled translate="label">
+							<label>Enable Module</label>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_enabledisable</source_model>
+							<sort_order>0</sort_order>
+							<show_in_default>1</show_in_default>
+						</enabled>
+						<debug>
+							<label>Debug</label>
+							<frontend_type>select</frontend_type>
+							<depends>
+								<enabled>1</enabled>
+							</depends>
+							<source_model>adminhtml/system_config_source_enabledisable</source_model>
+							<sort_order>1</sort_order>
+							<show_in_default>1</show_in_default>
+							<comment>Enable Pure360 Debug Logging.</comment>
+						</debug>
+						<advanced>
+							<label>Advanced Config</label>
+							<depends>
+								<enabled>1</enabled>
+							</depends>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_enabledisable</source_model>
+							<sort_order>3</sort_order>
+							<show_in_default>1</show_in_default>
+							<comment>Advanced config options.</comment>
+						</advanced>
+						<max_sync_size>
+							<label>Max Sync Items</label>
+							<depends>
+								<enabled>1</enabled>
+							</depends>
+							<frontend_type>text</frontend_type>
+							<sort_order>4</sort_order>
+							<show_in_default>1</show_in_default>
+							<validate>validate-number validate-greater-than-zero required-entry</validate>
+							<comment>Max items per sync</comment>
+						</max_sync_size>
+						<global translate="label">
+							<label>Default Mode</label>
+							<depends>
+								<enabled>1</enabled>
+							</depends>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_enabledisable</source_model>
+							<sort_order>5</sort_order>
+							<show_in_default>1</show_in_default>
+							<comment>Setting this will force Default Scope for all websites and stores.</comment>
+						</global>
+						<api_url translate="label">
+							<label>api url</label>
+							<depends>
+								<global>1</global>
+								<enabled>1</enabled>
+							</depends>
+							<frontend_type>text</frontend_type>
+							<sort_order>6</sort_order>
+							<show_in_default>1</show_in_default>
+							<validate>validate-clean-url required-entry</validate>
+						</api_url>
+					</fields>
+				</default_settings>
+
+				<default_settings_marketing translate="label">
+					<label>Marketing Profile</label>
+					<frontend_type>text</frontend_type>
+					<sort_order>2</sort_order>
+					<show_in_default>1</show_in_default>
+					<expanded>1</expanded>
+					<fields>
+						<username translate="label">
+							<label>username</label>
+							<frontend_type>text</frontend_type>
+							<sort_order>30</sort_order>
+							<show_in_default>1</show_in_default>
+							<validate>required-entry</validate>
+						</username>
+						<password translate="label">
+							<label>password</label>
+							<frontend_type>password</frontend_type>
+							<sort_order>40</sort_order>
+							<show_in_default>1</show_in_default>
+							<validate>required-entry</validate>
+						</password>				
+						<validate>
+							<label></label>
+							<frontend_type>text</frontend_type>
+							<frontend_model>pure360_common/adminhtml_system_config_validate_marketing</frontend_model>
+							<sort_order>50</sort_order>
+							<show_in_default>1</show_in_default>
+							<comment>Use this button to validate your marketing profile credentials before saving.</comment>
+						</validate>
+						<validated>
+							<frontend_type>hidden</frontend_type>
+							<sort_order>60</sort_order>
+							<show_in_default>1</show_in_default>
+							<validate>required-entry</validate>
+							<comment>
+							</comment>
+						</validated>
+					</fields>
+				</default_settings_marketing>
+
+				<default_settings_transactional translate="label">
+					<label>Transactional Profile</label>
+					<frontend_type>text</frontend_type>
+					<sort_order>3</sort_order>
+					<show_in_default>1</show_in_default>
+					<expanded>1</expanded>
+					<fields>
+						<enabled translate="label">
+							<label>Enable Module</label>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_enabledisable</source_model>
+							<backend_model>pure360_common/system_config_backend_enable</backend_model>
+							<sort_order>0</sort_order>
+							<show_in_default>1</show_in_default>
+						</enabled>
+						<username translate="label">
+							<label>username</label>
+							<depends>
+								<enabled>1</enabled>
+							</depends>
+							<frontend_type>text</frontend_type>
+							<sort_order>30</sort_order>
+							<show_in_default>1</show_in_default>
+							<validate>required-entry</validate>
+						</username>
+						<password translate="label">
+							<label>password</label>
+							<depends>
+								<enabled>1</enabled>
+							</depends>
+							<frontend_type>password</frontend_type>
+							<sort_order>40</sort_order>
+							<show_in_default>1</show_in_default>
+							<validate>required-entry</validate>
+						</password>				
+						<validate>
+							<frontend_type>text</frontend_type>
+							<frontend_model>pure360_common/adminhtml_system_config_validate_transactional</frontend_model>
+							<sort_order>50</sort_order>
+							<show_in_default>1</show_in_default>
+							<comment>Use this button to validate your transactional profile credentials before saving.</comment>
+						</validate>
+						<validated>
+							<frontend_type>hidden</frontend_type>
+							<sort_order>60</sort_order>
+							<show_in_default>1</show_in_default>
+							<validate>required-entry</validate>
+							<comment>
+							</comment>
+						</validated>
+					</fields>
+				</default_settings_transactional>
+
+			<!-- Websites -->
+				<websites_settings translate="label">
+					<label>Settings</label>
+					<frontend_type>text</frontend_type>
+					<sort_order>1</sort_order>
+					<show_in_website>1</show_in_website>
+					<expanded>1</expanded>
+					<fields>
+						<enabled translate="label">
+							<label>Enable Module</label>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_enabledisable</source_model>
+							<sort_order>0</sort_order>
+							<show_in_website>1</show_in_website>
+						</enabled>
+						<global translate="label">
+							<label>Website Mode</label>
+							<depends>
+								<enabled>1</enabled>
+							</depends>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_enabledisable</source_model>
+							<sort_order>10</sort_order>
+							<show_in_website>1</show_in_website>
+							<comment>Setting this will force Website Scope for all stores associated with this website.</comment>
+						</global>
+						<api_url translate="label">
+							<label>api url</label>
+							<depends>
+								<global>1</global>
+								<enabled>1</enabled>
+							</depends>
+							<frontend_type>text</frontend_type>
+							<sort_order>20</sort_order>
+							<show_in_website>1</show_in_website>
+							<validate>validate-clean-url required-entry</validate>
+						</api_url>
+					</fields>
+				</websites_settings>
+
+				<websites_settings_marketing translate="label">
+					<label>Marketing Profile</label>
+					<frontend_type>text</frontend_type>
+					<sort_order>2</sort_order>
+					<show_in_website>1</show_in_website>
+					<expanded>1</expanded>
+					<fields>
+						<username translate="label">
+							<label>username</label>
+							<frontend_type>text</frontend_type>
+							<sort_order>30</sort_order>
+							<show_in_website>1</show_in_website>
+							<validate>required-entry</validate>
+						</username>
+						<password translate="label">
+							<label>password</label>
+							<frontend_type>password</frontend_type>
+							<sort_order>40</sort_order>
+							<show_in_website>1</show_in_website>
+							<validate>required-entry</validate>
+						</password>				
+						<validate>
+							<label></label>
+							<frontend_type>text</frontend_type>
+							<frontend_model>pure360_common/adminhtml_system_config_validate_marketing</frontend_model>
+							<sort_order>50</sort_order>
+							<show_in_website>1</show_in_website>
+							<comment>Use this button to validate your marketing profile credentials before saving.</comment>
+						</validate>
+						<validated>
+							<frontend_type>hidden</frontend_type>
+							<sort_order>60</sort_order>
+							<show_in_website>1</show_in_website>
+							<validate>required-entry</validate>
+							<comment>
+							</comment>
+						</validated>
+					</fields>
+				</websites_settings_marketing>
+
+				<websites_settings_transactional translate="label">
+					<label>Transactional Profile</label>
+					<frontend_type>text</frontend_type>
+					<sort_order>3</sort_order>
+					<show_in_website>1</show_in_website>
+					<expanded>1</expanded>
+					<fields>
+						<enabled translate="label">
+							<label>Enable Module</label>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_enabledisable</source_model>
+							<backend_model>pure360_common/system_config_backend_enable</backend_model>
+							<sort_order>0</sort_order>
+							<show_in_website>1</show_in_website>
+						</enabled>
+						<username translate="label">
+							<label>username</label>
+							<depends>
+								<enabled>1</enabled>
+							</depends>
+							<frontend_type>text</frontend_type>
+							<sort_order>30</sort_order>
+							<show_in_website>1</show_in_website>
+							<validate>required-entry</validate>
+						</username>
+						<password translate="label">
+							<label>password</label>
+							<depends>
+								<enabled>1</enabled>
+							</depends>
+							<frontend_type>password</frontend_type>
+							<sort_order>40</sort_order>
+							<show_in_website>1</show_in_website>
+							<validate>required-entry</validate>
+						</password>
+						<validate>
+							<frontend_type>text</frontend_type>
+							<frontend_model>pure360_common/adminhtml_system_config_validate_transactional</frontend_model>
+							<sort_order>50</sort_order>
+							<show_in_website>1</show_in_website>
+							<comment>Use this button to validate your transactional profile credentials before saving.</comment>
+						</validate>
+						<validated>
+							<frontend_type>hidden</frontend_type>
+							<sort_order>60</sort_order>
+							<show_in_website>1</show_in_website>
+							<validate>required-entry</validate>
+							<comment>
+							</comment>
+						</validated>
+					</fields>
+				</websites_settings_transactional>
+
+			<!-- Stores -->
+				<stores_settings translate="label">
+					<label>Settings</label>
+					<frontend_type>text</frontend_type>
+					<sort_order>1</sort_order>
+					<show_in_store>1</show_in_store>
+					<expanded>1</expanded>
+					<fields>
+						<enabled translate="label">
+							<label>Enable Module</label>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_enabledisable</source_model>
+							<sort_order>0</sort_order>
+							<show_in_store>1</show_in_store>
+						</enabled>
+						<api_url translate="label">
+							<label>api url</label>
+							<depends>
+								<enabled>1</enabled>
+							</depends>
+							<frontend_type>text</frontend_type>
+							<sort_order>20</sort_order>
+							<show_in_store>1</show_in_store>
+							<validate>validate-clean-url required-entry</validate>
+						</api_url>
+					</fields>
+				</stores_settings>
+
+				<stores_settings_marketing translate="label">
+					<label>Marketing Profile</label>
+					<frontend_type>text</frontend_type>
+					<sort_order>2</sort_order>
+					<show_in_store>1</show_in_store>
+					<expanded>1</expanded>
+					<fields>
+						<username translate="label">
+							<label>username</label>
+							<frontend_type>text</frontend_type>
+							<sort_order>30</sort_order>
+							<show_in_store>1</show_in_store>
+							<validate>required-entry</validate>
+						</username>
+						<password translate="label">
+							<label>password</label>
+							<frontend_type>password</frontend_type>
+							<sort_order>40</sort_order>
+							<show_in_store>1</show_in_store>
+							<validate>required-entry</validate>
+						</password>				
+						<validate>
+							<label></label>
+							<frontend_type>text</frontend_type>
+							<frontend_model>pure360_common/adminhtml_system_config_validate_marketing</frontend_model>
+							<sort_order>50</sort_order>
+							<show_in_store>1</show_in_store>
+							<comment>Use this button to validate your marketing profile credentials before saving.</comment>
+						</validate>
+						<validated>
+							<frontend_type>hidden</frontend_type>
+							<sort_order>60</sort_order>
+							<show_in_store>1</show_in_store>
+							<validate>required-entry</validate>
+							<comment>
+							</comment>
+						</validated>
+					</fields>
+				</stores_settings_marketing>
+
+				<stores_settings_transactional translate="label">
+					<label>Transactional Profile</label>
+					<frontend_type>text</frontend_type>
+					<sort_order>3</sort_order>
+					<show_in_store>1</show_in_store>
+					<expanded>1</expanded>
+					<fields>
+						<enabled translate="label">
+							<label>Enable Module</label>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_enabledisable</source_model>
+							<backend_model>pure360_common/system_config_backend_enable</backend_model>
+							<sort_order>0</sort_order>
+							<show_in_store>1</show_in_store>
+						</enabled>
+						<username translate="label">
+							<label>username</label>
+							<depends>
+								<enabled>1</enabled>
+							</depends>
+							<frontend_type>text</frontend_type>
+							<sort_order>30</sort_order>
+							<show_in_store>1</show_in_store>
+							<validate>required-entry</validate>
+						</username>
+						<password translate="label">
+							<label>password</label>
+							<depends>
+								<enabled>1</enabled>
+							</depends>
+							<frontend_type>password</frontend_type>
+							<sort_order>40</sort_order>
+							<show_in_store>1</show_in_store>
+							<validate>required-entry</validate>
+						</password>				
+						<validate>
+							<frontend_type>text</frontend_type>
+							<frontend_model>pure360_common/adminhtml_system_config_validate_transactional</frontend_model>
+							<sort_order>50</sort_order>
+							<show_in_store>1</show_in_store>
+							<comment>Use this button to validate your transactional profile credentials before saving.</comment>
+						</validate>
+						<validated>
+							<frontend_type>hidden</frontend_type>
+							<sort_order>60</sort_order>
+							<show_in_store>1</show_in_store>
+							<validate>required-entry</validate>
+							<comment>
+							</comment>
+						</validated>
+					</fields>
+				</stores_settings_transactional>
+
+			</groups>
+		</pure360>
+	</sections>
+</config>

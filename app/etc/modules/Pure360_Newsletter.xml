@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Pure360_Newsletter>
+            <active>true</active>
+            <codePool>community</codePool>
+            <depends>
+                <Pure360_Common/>
+                <Mage_Newsletter/>
+            </depends>
+        </Pure360_Newsletter>
+    </modules>
+</config>

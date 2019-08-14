@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<config>
+	<sections>
+		<pure360_cron module="pure360_cron">
+			<label>Cron Manager</label>
+			<tab>pure360</tab>
+			<frontend_type>text</frontend_type>
+			<sort_order>700</sort_order>
+			<show_in_default>1</show_in_default>
+			<show_in_website>1</show_in_website>
+			<show_in_store>1</show_in_store>
+			<groups>
+				<about>
+					<frontend_type>text</frontend_type>
+					<frontend_model>pure360_cron/adminhtml_system_config_about</frontend_model>
+					<sort_order>0</sort_order>
+					<show_in_default>1</show_in_default>
+					<show_in_website>1</show_in_website>
+					<show_in_store>1</show_in_store>
+				</about>
+                <cron_manager>
+                    <frontend_type>text</frontend_type>
+                    <frontend_model>pure360_cron/adminhtml_system_cron_manager</frontend_model>
+                    <sort_order>4</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                </cron_manager>
+			</groups>
+		</pure360_cron>
+	</sections>
+</config>

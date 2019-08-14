@@ -1,0 +1,229 @@
+<?xml version="1.0"?>
+<config>
+	<sections>
+		<pure360_newsletter module="pure360_newsletter">
+			<label>Newsletter</label>
+			<tab>pure360</tab>
+			<frontend_type>text</frontend_type>
+			<sort_order>300</sort_order>
+			<show_in_default>1</show_in_default>
+			<show_in_website>1</show_in_website>
+			<show_in_store>1</show_in_store>
+			<groups>
+				<about>
+					<frontend_type>text</frontend_type>
+					<frontend_model>pure360_newsletter/adminhtml_system_config_about</frontend_model>
+					<sort_order>0</sort_order>
+					<show_in_default>1</show_in_default>
+					<show_in_website>1</show_in_website>
+					<show_in_store>1</show_in_store>
+				</about>
+
+				<default_settings translate="label">
+					<label>Settings</label>
+					<frontend_type>text</frontend_type>
+					<sort_order>10</sort_order>
+					<show_in_default>1</show_in_default>
+					<expanded>1</expanded>
+					<fields>
+						<enabled translate="label">
+							<label>Enable Module</label>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_enabledisable</source_model>
+							<sort_order>0</sort_order>
+							<show_in_default>1</show_in_default>
+						</enabled>
+					</fields>
+				</default_settings>
+
+				<websites_settings translate="label">
+					<label>Settings</label>
+					<frontend_type>text</frontend_type>
+					<sort_order>20</sort_order>
+					<show_in_website>1</show_in_website>
+					<expanded>1</expanded>
+					<fields>
+						<enabled translate="label">
+							<label>Enable Module</label>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_enabledisable</source_model>
+							<sort_order>0</sort_order>
+							<show_in_website>1</show_in_website>
+						</enabled>
+					</fields>
+				</websites_settings>
+
+				<stores_settings translate="label">
+					<label>Settings</label>
+					<frontend_type>text</frontend_type>
+					<sort_order>30</sort_order>
+					<show_in_store>1</show_in_store>
+					<expanded>1</expanded>
+					<fields>
+						<enabled translate="label">
+							<label>Enable Module</label>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_enabledisable</source_model>
+							<sort_order>0</sort_order>
+							<show_in_store>1</show_in_store>
+						</enabled>
+					</fields>
+				</stores_settings>
+
+				<default_checkout>
+					<label>Checkout</label>
+					<frontend_type>text</frontend_type>
+					<sort_order>40</sort_order>
+					<show_in_default>1</show_in_default>
+					<expanded>1</expanded>
+					<fields>
+						<show_to_guests>
+							<label>Show on Guest Checkout</label>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_yesno</source_model>
+							<sort_order>5</sort_order>
+							<show_in_default>1</show_in_default>
+						</show_to_guests>
+						<show_to_registrars>
+							<label>Show on Register Checkout</label>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_yesno</source_model>
+							<sort_order>6</sort_order>
+							<show_in_default>1</show_in_default>
+						</show_to_registrars>
+						<show_to_customers>
+							<label>Show on Customer Checkout</label>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_yesno</source_model>
+							<sort_order>7</sort_order>
+							<show_in_default>1</show_in_default>
+						</show_to_customers>
+						<show_if_subscribed>
+							<label>Show if Already Subscribed</label>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_yesno</source_model>
+							<sort_order>8</sort_order>
+							<show_in_default>1</show_in_default>
+						</show_if_subscribed>
+						<default_checked>
+							<label>Checked by Default</label>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_yesno</source_model>
+							<sort_order>9</sort_order>
+							<show_in_default>1</show_in_default>
+						</default_checked>
+						<label_text>
+							<label>Checkbox Label Text</label>
+							<frontend_type>text</frontend_type>
+							<sort_order>10</sort_order>
+							<show_in_default>1</show_in_default>
+						</label_text>
+					</fields>
+				</default_checkout>
+
+				<websites_checkout>
+					<label>Checkout</label>
+					<frontend_type>text</frontend_type>
+					<sort_order>40</sort_order>
+					<show_in_website>1</show_in_website>
+					<expanded>1</expanded>
+					<fields>
+						<show_to_guests>
+							<label>Show on Guest Checkout</label>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_yesno</source_model>
+							<sort_order>5</sort_order>
+							<show_in_website>1</show_in_website>
+						</show_to_guests>
+						<show_to_registrars>
+							<label>Show on Register Checkout</label>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_yesno</source_model>
+							<sort_order>6</sort_order>
+							<show_in_website>1</show_in_website>
+						</show_to_registrars>
+						<show_to_customers>
+							<label>Show on Customer Checkout</label>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_yesno</source_model>
+							<sort_order>7</sort_order>
+							<show_in_website>1</show_in_website>
+						</show_to_customers>
+						<show_if_subscribed>
+							<label>Show if Already Subscribed</label>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_yesno</source_model>
+							<sort_order>8</sort_order>
+							<show_in_website>1</show_in_website>
+						</show_if_subscribed>
+						<websites_checked>
+							<label>Checked by websites</label>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_yesno</source_model>
+							<sort_order>9</sort_order>
+							<show_in_website>1</show_in_website>
+						</websites_checked>
+						<label_text>
+							<label>Checkbox Label Text</label>
+							<frontend_type>text</frontend_type>
+							<sort_order>10</sort_order>
+							<show_in_website>1</show_in_website>
+						</label_text>
+					</fields>
+				</websites_checkout>
+				
+				<stores_checkout>
+					<label>Checkout</label>
+					<frontend_type>text</frontend_type>
+					<sort_order>40</sort_order>
+					<show_in_store>1</show_in_store>
+					<expanded>1</expanded>
+					<fields>
+						<show_to_guests>
+							<label>Show on Guest Checkout</label>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_yesno</source_model>
+							<sort_order>5</sort_order>
+							<show_in_store>1</show_in_store>
+						</show_to_guests>
+						<show_to_registrars>
+							<label>Show on Register Checkout</label>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_yesno</source_model>
+							<sort_order>6</sort_order>
+							<show_in_store>1</show_in_store>
+						</show_to_registrars>
+						<show_to_customers>
+							<label>Show on Customer Checkout</label>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_yesno</source_model>
+							<sort_order>7</sort_order>
+							<show_in_store>1</show_in_store>
+						</show_to_customers>
+						<show_if_subscribed>
+							<label>Show if Already Subscribed</label>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_yesno</source_model>
+							<sort_order>8</sort_order>
+							<show_in_store>1</show_in_store>
+						</show_if_subscribed>
+						<stores_checked>
+							<label>Checked by stores</label>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_yesno</source_model>
+							<sort_order>9</sort_order>
+							<show_in_store>1</show_in_store>
+						</stores_checked>
+						<label_text>
+							<label>Checkbox Label Text</label>
+							<frontend_type>text</frontend_type>
+							<sort_order>10</sort_order>
+							<show_in_store>1</show_in_store>
+						</label_text>
+					</fields>
+				</stores_checkout>
+				
+			</groups>
+		</pure360_newsletter>
+	</sections>
+</config>

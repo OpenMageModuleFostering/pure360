@@ -1,0 +1,18 @@
+<?php
+	$scope = Mage::helper('pure360_common')->getScope();
+	$scopeId = Mage::helper('pure360_common')->getScopeId();
+?>
+<script type="text/javascript">
+	//<![CDATA[
+    function initPure360List() 
+	{
+		pure360List = new Pure360List(
+			'<?php echo $scope; ?>',
+			'<?php echo $scopeId; ?>',
+			'<?php echo $this->getUrl('pure360_list/Ajax/saveList'); ?>',
+			'<?php echo $this->getUrl('pure360_list/Ajax/removeList'); ?>',
+			'<?php echo $this->getUrl('pure360_list/Ajax/resyncList'); ?>');
+	}
+	//]]>
+</script>
+

@@ -1,0 +1,126 @@
+<div id="pure360_list_container">
+	<div id="pure360_list_options" class="entry-edit">
+		<div class="entry-edit-head">
+			<h4 class="icon-head head-edit-form fieldset-legend"><?php echo Mage::helper('pure360_list')->__('List Options') ?></h4>
+		</div>
+		<fieldset name="pure360_list">
+			<legend><?php echo Mage::helper('pure360_list')->__('List Options') ?></legend>
+			<input name="pure360_list_id" id="pure360_list_id" value="<?php echo $this->list->getId(); ?>" type="hidden" />
+			<table class="form-list" cellspacing="0">
+				<colgroup class="label"></colgroup>
+				<colgroup class="value"></colgroup>
+				<colgroup class="scope-label"></colgroup>
+				<colgroup class=""></colgroup>
+				<tbody id="pure360_list_table_body">
+					<tr>
+						<td class="label"><label><?php echo Mage::helper('pure360_list')->__('List Name') ?></label></td>
+						<td class="value">
+							<input name="pure360_list_name" id="pure360_list_name" placeholder="New List" value="<?php echo $this->list->getListName(); ?>" class="input-text required-entry" type="text" />
+						</td>
+						<td class="value scope-label"><?php echo Mage::helper('adminhtml')->__('[GLOBAL]') ?></td>
+					</tr>
+					<tr>
+						<td class="label"><label><?php echo Mage::helper('pure360_list')->__('Domain Name Filter') ?></label></td>
+						<td class="value">
+							<input name="pure360_list_filter" id="pure360_list_filter" value="<?php echo $this->list->getListFilter(); ?>" class="input-text" type="text" />
+						</td>
+						<td class="value scope-label"><?php echo Mage::helper('adminhtml')->__('[GLOBAL]') ?></td>
+					</tr>
+					<tr>
+						<td class="label"><label><?php echo Mage::helper('pure360_list')->__('Success Page Tracking') ?></label></td>
+						<td class="value">
+							<input name="pure360_list_success_tracking_enabled" id="pure360_list_success_tracking_enabled" <?php echo ($this->list->getSuccessTrackingEnabled() == 'y' ? 'checked="checked"' : ''); ?> class="input-checkbox" type="checkbox" />
+						</td>
+						<td class="value scope-label"><?php echo Mage::helper('adminhtml')->__('[GLOBAL]') ?></td>
+					</tr>	
+					<tr id="pure360_list_success_tracking_token_row">
+						<td class="label"><label><?php echo Mage::helper('pure360_list')->__('Tracking Token') ?>:</label></td>
+						<td class="value">
+							<input name="pure360_list_success_tracking_token" id="pure360_list_success_tracking_token" value="<?php echo $this->list->getSuccessTrackingToken(); ?>" class="input-text" type="text" />
+						</td>
+						<td class="value scope-label"><?php echo Mage::helper('adminhtml')->__('[GLOBAL]') ?></td>
+					</tr>
+					<tr id="pure360_list_double_optin_row">
+						<td class="label"><label><?php echo Mage::helper('pure360_list')->__('Double Opt-in') ?></label></td>
+						<td class="value">
+							<input name="pure360_list_double_optin_enabled" id="pure360_list_double_optin_enabled" <?php echo ($this->list->getDoubleOptinEnabled() == 'y' ? 'checked="checked"' : ''); ?> class="input-checkbox" type="checkbox" />	
+						</td>
+						<td class="value scope-label"><?php echo Mage::helper('adminhtml')->__('[GLOBAL]') ?></td>
+					</tr>
+					
+					<tr>
+						<td class="label">List Status</td>
+						<td class="value">
+							<?php echo $this->list->getListStatus(); ?>
+						</td>
+						<td class="value scope-label"></td>
+					</tr>
+					<?php if($this->list->getListStatus() !== Pure360_List_Model_List::LIST_STATUS_NEW) : ?>
+						<tr>
+							<td class="label">Actions</td>
+							<td class="value">
+								<?php if($this->list->getListStatus() === Pure360_List_Model_List::LIST_STATUS_SYNCED) : ?>
+									<button id="pure360_list_resync" type="button" class="scalable">Re-Sync List</button>
+								<?php endif; ?>
+								<button style="display: none" id="pure360_list_remove" type="button" class="scalable hidden">Remove List</button>
+							</td>
+							<td class="value scope-label"></td>
+						</tr>
+					<?php endif; ?>
+				</tbody>
+			</table>
+		</fieldset>
+	</div>
+
+	<div class="entry-edit pure360_list_dynamic">
+		<div class="entry-edit-head">
+			<h4 class="icon-head head-edit-form fieldset-legend"><?php echo Mage::helper('pure360_list')->__('Customer Data Field Mapping') ?></h4>
+		</div>
+		<fieldset name="pure360_list">
+			<table class="form-list" cellspacing="0">
+				<colgroup class="label"></colgroup>
+				<colgroup class="value"></colgroup>
+				<colgroup class="scope-label"></colgroup>
+				<colgroup class=""></colgroup>
+				<tbody>
+					<?php echo $this->getDataFields(); ?>
+				</tbody>
+			</table>
+		</fieldset>
+	</div>
+
+	<div class="entry-edit pure360_list_dynamic">
+		<div class="entry-edit-head">
+			<h4 class="icon-head head-edit-form fieldset-legend"><?php echo Mage::helper('pure360_list')->__('Customer Address Field Mapping') ?></h4>
+		</div>
+		<fieldset name="pure360_list">
+			<table class="form-list" cellspacing="0">
+				<colgroup class="label"></colgroup>
+				<colgroup class="value"></colgroup>
+				<colgroup class="scope-label"></colgroup>
+				<colgroup class=""></colgroup>
+				<tbody>
+					<?php echo $this->getAddressFields(); ?>
+				</tbody>
+			</table>
+		</fieldset>
+	</div>
+
+	<div class="entry-edit pure360_list_dynamic">
+		<div class="entry-edit-head">
+			<h4 class="icon-head head-edit-form fieldset-legend"><?php echo Mage::helper('pure360_list')->__('Customer Sales Field Mapping') ?></h4>
+		</div>
+		<fieldset name="pure360_list">
+			<table class="form-list" cellspacing="0">
+				<colgroup class="label"></colgroup>
+				<colgroup class="value"></colgroup>
+				<colgroup class="scope-label"></colgroup>
+				<colgroup class=""></colgroup>
+				<tbody>
+					<?php echo $this->getSalesFields(); ?>
+				</tbody>
+			</table>
+		</fieldset>
+	</div>
+
+</div>

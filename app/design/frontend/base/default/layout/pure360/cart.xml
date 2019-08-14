@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<layout version="1.0.0">
+    <pure360_cart_email_order_items>
+        <block type="pure360_cart/email_order_items" name="items" template="pure360/cart/email/order/items.phtml">
+            <action method="addItemRender"><type>default</type><block>pure360_cart/email_order_items_order_default</block><template>pure360/cart/email/order/items/order/default.phtml</template></action>
+            <action method="addItemRender"><type>grouped</type><block>pure360_cart/email_order_items_order_grouped</block><template>pure360/cart/email/order/items/order/default.phtml</template></action>
+        </block>
+        <block type="core/text_list" name="additional.product.info" />
+    </pure360_cart_email_order_items>
+</layout>
