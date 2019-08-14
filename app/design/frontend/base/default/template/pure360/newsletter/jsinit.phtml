@@ -35,7 +35,7 @@
 				});
 			}
 			
-			$$('#co-billing-form fieldset ul').first().insert(
+			$$('#co-billing-form .fieldset ul, #co-billing-form fieldset ul').first().insert(
 				'<li><!-- --></li>' +
 				'<li class="control" id="customer-subscribe" style="display:none;">' +
 				'<input name="billing[is_subscribed]" id="billing:is_subscribed_box" value="1" checked="checked" title="Ship to this address" onchange="setSubscribedValue(this); return false;" class="checkbox" type="checkbox" />' +
@@ -43,7 +43,7 @@
 				'</li>'
 			);
 			
-			$$('#co-billing-form fieldset')[0].insert(
+			$$('#co-billing-form .fieldset, #co-billing-form fieldset')[0].insert(
 					'<input id="billing:is_subscribed_original" type="hidden" name="billing[is_subscribed_original]" value="1" />' +
 					'<input id="billing:is_subscribed" type="hidden" name="billing[is_subscribed]" value="1" />');
 			

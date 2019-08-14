@@ -40,7 +40,8 @@ class Pure360_Session
 		$this->beanData = $context->login($this->properties["username"], $this->properties["password"]);
 
 		// Set context
-		$this->context = $this->beanData["bus_entity_context"];
+		$this->context						= $this->beanData["bus_entity_context"];
+		$this->context['defaultLanguage']	= $this->beanData["bus_entity_account_identity"]["defaultLanguage"];
 		$this->client->setContext($this->context);
 
 		// Set identity

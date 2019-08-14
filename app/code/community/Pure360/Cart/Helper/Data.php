@@ -29,7 +29,7 @@ class Pure360_Cart_Helper_Data extends Pure360_Common_Helper_Data
 		$storeIds	= Mage::helper('pure360_common')->getStoreIdsForScope($scope, $scopeId);
 		
 		$sql = "UPDATE $table
-					SET pure360_trigger_count = -1
+					SET pure360_trigger_id = -1
 					WHERE is_active = 1
 					AND store_id IN (". implode(",", $storeIds) .")";
 		

@@ -129,44 +129,48 @@ class Pure360_Client
 
 		} catch (Exception $e)
 		{
-			throw new Exception('[Pure360] Could not connect to host');
+			throw new Exception('[Pure360] Could not connect to host: '.$class.'::'.$process.' '. $e->getMessage());
 		}
-		
-		// Validate response
-		if (isset($response['result']))
-		{
-			switch ($response["result"])
+		try {
+			// Validate response
+			if (isset($response['result']))
 			{
-				case "success":
-					if (!empty($response["resultData"]))
-					{
-						$results = $response["resultData"];
-					} else
-					{
-						$results = array();
-					}
-					break;
+				switch ($response["result"])
+				{
+					case "success":
+						if (!empty($response["resultData"]))
+						{
+							$results = $response["resultData"];
+						} else
+						{
+							$results = array();
+						}
+						break;
 
-				case "bean_exception_validation":
-					
-					throw new Pure360_Exception_ValidationException($response["resultData"]);
+					case "bean_exception_validation":
 
-				case "bean_exception_security":
-					
-					throw new Pure360_Exception_SecurityException($response["resultData"]);
+						throw new Pure360_Exception_ValidationException($response["resultData"]);
 
-				case "bean_exception_system":
-					
-					throw new Pure360_Exception_SystemException($response["resultData"]);
+					case "bean_exception_security":
 
-				default:
-					
-					throw new Exception("[Pure360] Unhandled exception");
-			}
+						throw new Pure360_Exception_SecurityException($response["resultData"]);
+
+					case "bean_exception_system":
+
+						throw new Pure360_Exception_SystemException($response["resultData"]);
+
+					default:
+
+						throw new Exception("[Pure360] Unhandled exception");
+				}
 			
-		} else
+			} else
+			{
+				throw new Exception("[Pure360] Invalid api response.");
+			}
+		} catch (Exception $e)
 		{
-			throw new Exception("[Pure360] Invalid api response.");
+			Mage::helper('pure360_list')->writeError("Client - ".$e->getMessage());
 		}
 
 		// Save request and response

@@ -180,11 +180,10 @@ class Pure360_Common_Helper_Api extends Mage_Core_Helper_Abstract
 		curl_setopt($curl, CURLOPT_POSTFIELDS, $postFields);
 
 		$res = curl_exec($curl);
-        $info = curl_getinfo($curl);
-        Mage::helper('pure360_common')->writeDebug("Res: " . $res);
-        Mage::helper('pure360_common')->writeDebug("Info: " . print_r($info, true));
 
-        curl_close($curl);
+		Mage::helper('pure360_common')->writeDebug($res);
+
+		curl_close($curl);
 	}
 
 }

@@ -165,7 +165,8 @@ class Pure360_Common_Helper_File extends Mage_Core_Helper_Abstract
 	 */
 	public function outputCSV($filepath, $csv)
 	{
-
+		$csv = preg_replace(array("/\r/", "/\n/"), " ", $csv);
+		
 		// Open for writing only; place the file pointer at the end of the file. If the file does not exist, attempt to create it.
 		$handle = fopen($filepath, "a");
 

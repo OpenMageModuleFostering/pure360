@@ -102,15 +102,15 @@
 		</layout>
 	</adminhtml>
 	<admin>
-		<routers>
-			<pure360_cron>
-				<use>admin</use>
-				<args>
-					<module>Pure360_Cron</module>
-					<frontName>pure360_cron</frontName>
-				</args>
-			</pure360_cron>
-		</routers>
+        <routers> 
+            <adminhtml> 
+                <args> 
+                    <modules> 
+                        <pure360_cron after="Mage_Adminhtml">Pure360_Cron_Adminhtml</pure360_cron> 
+                    </modules> 
+                </args> 
+            </adminhtml> 
+        </routers> 
 	</admin>
 	<default>
 		<pure360_cron>

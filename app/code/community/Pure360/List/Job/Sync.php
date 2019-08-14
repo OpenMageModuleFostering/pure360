@@ -95,6 +95,8 @@ class Pure360_List_Job_Sync extends Pure360_Cron_Job_Abstract
 
 		// Update message with rows uploaded
 		$this->_data->setData('message', $list->rows . ' rows processed, ' . $list->optout_rows . ' rows opted out ');
+		
+		Mage::helper('pure360_list')->writeDebug(__METHOD__ . ' message: '. $list->rows . ' rows processed, ' . $list->optout_rows . ' rows opted out ');
 
 		// Save list data
 		$this->_data->save();
@@ -283,7 +285,9 @@ class Pure360_List_Job_Sync extends Pure360_Cron_Job_Abstract
 
 			unset($currentBatch);
 		} while($condition == $batchSize && $list->rows < $this->max_sync_size);
-
+		
+		Mage::helper('pure360_list')->writeDebug(__METHOD__ .' FilePath where data is temporarily saved - '.$filePath);
+		Mage::helper('pure360_list')->writeDebug(__METHOD__ .' Number of rows to sync - '. $list->rows);
 		Mage::helper('pure360_list')->writeDebug(__METHOD__ . ' - end');
 	}
 
@@ -310,7 +314,7 @@ class Pure360_List_Job_Sync extends Pure360_Cron_Job_Abstract
 				->addAttributeToSelect('subscriber_status')
 				->addAttributeToSelect('subscription_date')
 		;
-
+		
 		// Add Custom Select
 		foreach($list->getListFields() as $field)
 		{
@@ -520,7 +524,9 @@ class Pure360_List_Job_Sync extends Pure360_Cron_Job_Abstract
 
 			unset($currentBatch);
 		} while($condition == $batchSize && $list->rows <= $this->max_sync_size);
-
+		
+		Mage::helper('pure360_list')->writeDebug(__METHOD__ .' FilePath where data is temporarily saved - '.$filePath);
+		Mage::helper('pure360_list')->writeDebug(__METHOD__ .' Number of rows to sync - '. $list->rows);
 		Mage::helper('pure360_list')->writeDebug(__METHOD__ . ' - end');
 	}
 
@@ -669,7 +675,9 @@ class Pure360_List_Job_Sync extends Pure360_Cron_Job_Abstract
 
 			unset($currentBatch);
 		} while($condition == $batchSize && $list->optout_rows <= $this->max_sync_size);
-
+		
+		Mage::helper('pure360_list')->writeDebug(__METHOD__ .' FilePath where data is temporarily saved - '.$filePath);
+		Mage::helper('pure360_list')->writeDebug(__METHOD__ .' Number of rows to sync - '. $list->rows);
 		Mage::helper('pure360_list')->writeDebug(__METHOD__ . ' - end');
 	}
 
@@ -719,6 +727,8 @@ class Pure360_List_Job_Sync extends Pure360_Cron_Job_Abstract
 		$count = count($files);
 		$page = 1;
 
+		Mage::helper('pure360_list')->writeDebug(__METHOD__ .' Number of chunks - '.$count);
+		
 		// Create file
 		$api->createFile($this->client, $fileCategory, $fileName, $count, "Y");
 
@@ -729,7 +739,7 @@ class Pure360_List_Job_Sync extends Pure360_Cron_Job_Abstract
 			$api->uploadFileChunk($this->client, $fileCategory, $fileName, $page, $chunkData, "base64");
 			$page++;
 		}
-
+		
 		reset($files);
 
 		// Create/Append list		

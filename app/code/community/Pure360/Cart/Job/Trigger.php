@@ -36,9 +36,9 @@ class Pure360_Cart_Job_Trigger extends Pure360_Cron_Job_Abstract
 		$this->max_cart_size	= Mage::helper('pure360_common')->getScopedConfig('pure360_cart/' . $filter . 'settings/max_cart_size', $scope, $scopeId);
 		$this->processed		= array();
 
-		for($i = 1; $i <= 3;  $i++)
+		for($triggerId = 1; $triggerId <= 3;  $triggerId++)
 		{
-			$triggerName = 'trigger' . ($i);
+			$triggerName = 'trigger' . ($triggerId);
 			$triggerEnabled = Mage::helper('pure360_common')->getScopedConfig('pure360_cart/' . $filter . $triggerName . '/enabled', $scope, $scopeId);
 
 			if($triggerEnabled)
@@ -62,13 +62,14 @@ class Pure360_Cart_Job_Trigger extends Pure360_Cron_Job_Abstract
 					}
 				}
 
-				$quotes = $this->getQuotesForTrigger($scope, $scopeId, $triggerDelay, $i);
+				$quotes = $this->getQuotesForTrigger($scope, $scopeId, $triggerDelay, $triggerId);
 
 				foreach($quotes as $quote)
 				{
-					// Increment trigger count
-					$this->incrementTriggerCount($quote);
-					$quote->setPure360TriggerCount($quote->getPure360TriggerCount()+1);					
+					
+					$quote->setPure360TriggerId($triggerId);	
+					// Update Trigger Id and date
+					$this->updateTriggerIdAndTriggerDate($quote);				
 					
 					// Store Id as processed
 					$this->processed[] = $quote->getEntityId();
@@ -147,9 +148,6 @@ class Pure360_Cart_Job_Trigger extends Pure360_Cron_Job_Abstract
 		$to = date('Y-m-d H:i:s', $lastTime);
 		$collection->addFieldToFilter('updated_at', array('to' => $to));
 		
-		// Add triggerNumber filter
-		$collection->addFieldToFilter('pure360_trigger_count', array('eq' => ($triggerNumber - 1)));
-		
 		// Add processed filter
 		if(!empty($this->processed))
 		{
@@ -157,29 +155,29 @@ class Pure360_Cart_Job_Trigger extends Pure360_Cron_Job_Abstract
 		}
 		
 		// Add order and limit 
-		$collection->getSelect()->order('updated_at asc')->limit($this->max_cart_size);
+		$collection->getSelect()
+				->where(new Zend_Db_Expr('pure360_trigger_id = '.($triggerNumber - 1).' OR updated_at > pure360_trigger_dt')) // Add triggerNumber filter
+				->order('updated_at asc')->limit($this->max_cart_size);				
 
 		return $collection;
 	}
 
 	/**
-	 * Increments trigger count by one
+	 * Update trigger id and trigger date
 	 * 
 	 * @param Mage_Sales_Model_Quote $quote
 	 */
-	private function incrementTriggerCount($quote)
+	private function updateTriggerIdAndTriggerDate($quote)
 	{
-		$resource	= Mage::getSingleton('core/resource');
-		$write		= $resource->getConnection('core_write');
-		$table		= $resource->getTableName('sales/quote');
-		$createdAt	= $quote->getCreatedAt();
-		$updatedAt	= $quote->getUpdatedAt();
-		$entityId	= $quote->getEntityId();
+		$resource		= Mage::getSingleton('core/resource');
+		$write			= $resource->getConnection('core_write');
+		$table			= $resource->getTableName('sales/quote');
+		$entityId		= $quote->getEntityId();
+		$triggerId		= $quote->getPure360TriggerId();
 				
 		$sql = "UPDATE $table
-				SET created_at = '$createdAt',
-					updated_at = '$updatedAt',
-					pure360_trigger_count = pure360_trigger_count+1
+				SET pure360_trigger_id = $triggerId, 
+					pure360_trigger_dt = NOW()
 				WHERE entity_id = $entityId";
 		
 		$write->query($sql);
@@ -242,8 +240,6 @@ class Pure360_Cart_Job_Trigger extends Pure360_Cron_Job_Abstract
 				WHERE entity_id = $entityId
 				AND is_active = 1";
 
-        Mage::helper('pure360_cart')->writeDebug(__METHOD__ . " - $sql");
-
-        $write->query($sql);
+		$write->query($sql);
 	}
 }

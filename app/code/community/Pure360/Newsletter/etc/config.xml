@@ -112,15 +112,15 @@
 		</layout>
 	</adminhtml>	
 	<admin>
-		<routers>
-			<pure360_newsletter>
-				<use>admin</use>
-				<args>
-					<module>Pure360_Newsletter</module>
-					<frontName>pure360_newsletter</frontName>
-				</args>
-			</pure360_newsletter>
-		</routers>
+		<routers> 
+			<adminhtml> 
+				<args> 
+					<modules> 
+						<pure360_newsletter after="Mage_Adminhtml">Pure360_Newsletter_Adminhtml</pure360_newsletter> 
+					</modules> 
+				</args> 
+			</adminhtml> 
+		</routers> 
 	</admin>
 	<default>
 		<pure360_newsletter>

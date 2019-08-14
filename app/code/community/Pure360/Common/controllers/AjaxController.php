@@ -4,7 +4,7 @@
  * @package   Pure360\Common
  * @copyright 2013 Pure360.com
  */
-class Pure360_Common_AjaxController extends Mage_Adminhtml_Controller_Action
+class Pure360_Common_AjaxController extends Mage_Core_Controller_Front_Action
 {
 
 	/**
