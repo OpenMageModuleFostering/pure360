@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<layout version="1.0.0">
+<layout>
     <checkout_onepage_index>
         <reference name="content">
             <block type="pure360_newsletter/checkout_onepage_newsletter" name="checkout.onepage.billing.newsletter.js" after="-">

@@ -3,8 +3,6 @@
 /**
  * @package   Pure360\Cron
  * @copyright 2013 Pure360.com
- * @version   1.0.1
- * @author    Stewart Waller <stewart.waller@pure360.com>
  */
 class Pure360_Cron_Block_Adminhtml_System_Cron_Manager_Logs_Renderer_Download extends Mage_Adminhtml_Block_Widget_Grid_Column_Renderer_Abstract
 {

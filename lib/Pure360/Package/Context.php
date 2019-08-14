@@ -3,7 +3,6 @@
 /**
  * Description of Context
  *
- * @author stewart.waller
  */
 class Pure360_Package_Context extends Pure360_Package
 {

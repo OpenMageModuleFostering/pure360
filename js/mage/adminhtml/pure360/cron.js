@@ -1,5 +1,6 @@
 Event.observe(window, 'load', function() {
 	initPure360Cron();
+	setTimeout('window.location.reload();', 10000);
 });
 
 Pure360Cron = Class.create();

@@ -3,8 +3,6 @@
 /**
  * @package   Pure360\Cron
  * @copyright 2013 Pure360.com
- * @version   1.0.1
- * @author    Stewart Waller <stewart.waller@pure360.com>
  */
 class Pure360_Cron_Model_Resource_Job_Collection extends Mage_Core_Model_Mysql4_Collection_Abstract
 {
@@ -29,14 +27,14 @@ class Pure360_Cron_Model_Resource_Job_Collection extends Mage_Core_Model_Mysql4_
 	{
 		$nullCheck = false;
 
-		if (!is_array($storeIds))
+		if(!is_array($storeIds))
 		{
 			$storeIds = array($storeIds);
 		}
 
 		$storeIds = array_unique($storeIds);
 
-		if ($index = array_search(null, $storeIds))
+		if($index = array_search(null, $storeIds))
 		{
 			unset($storeIds[$index]);
 			$nullCheck = true;
@@ -44,7 +42,7 @@ class Pure360_Cron_Model_Resource_Job_Collection extends Mage_Core_Model_Mysql4_
 
 		$storeIds[0] = ($storeIds[0] == '') ? 0 : $storeIds[0];
 
-		if ($nullCheck)
+		if($nullCheck)
 		{
 			$this->getSelect()->where('store_id IN(?) OR store_id IS NULL', $storeIds);
 		} else

@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<layout version="1.0.0">
+<layout>
     <pure360_cart_email_order_items>
         <block type="pure360_cart/email_order_items" name="items" template="pure360/cart/email/order/items.phtml">
             <action method="addItemRender"><type>default</type><block>pure360_cart/email_order_items_order_default</block><template>pure360/cart/email/order/items/order/default.phtml</template></action>

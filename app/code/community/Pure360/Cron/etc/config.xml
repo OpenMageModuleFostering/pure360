@@ -2,7 +2,7 @@
 <config>
 	<modules>
 		<Pure360_Cron>
-			<version>1.0.1</version>
+			<version>1.0.2</version>
 		</Pure360_Cron>
 	</modules>
 	<global>
@@ -103,13 +103,13 @@
 	</adminhtml>
 	<admin>
 		<routers>
-			<adminhtml>
+			<pure360_cron>
+				<use>admin</use>
 				<args>
-					<modules>
-						<pure360_cron before="Mage_Adminhtml">Pure360_Cron_Adminhtml</pure360_cron>
-					</modules>
+					<module>Pure360_Cron</module>
+					<frontName>pure360_cron</frontName>
 				</args>
-			</adminhtml>
+			</pure360_cron>
 		</routers>
 	</admin>
 	<default>

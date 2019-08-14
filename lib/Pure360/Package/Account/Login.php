@@ -6,7 +6,6 @@
  * @package account
  * @subpackage facade
  *
- * @author	Stewart Waller	<mark.hla@pure360.com>
  */
 class Pure360_Package_Account_Login extends Pure360_Entity
 {

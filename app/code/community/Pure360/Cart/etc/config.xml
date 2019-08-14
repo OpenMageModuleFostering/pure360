@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Pure360_Cart>
-            <version>1.0.1</version>
+            <version>1.0.2</version>
         </Pure360_Cart>
     </modules>
     <global>
@@ -108,13 +108,13 @@
 	</adminhtml>
 	<admin>
 		<routers>
-			<adminhtml>
+			<pure360_cart>
+				<use>admin</use>
 				<args>
-					<modules>
-						<pure360_cart before="Mage_Adminhtml">Pure360_Cart_Adminhtml</pure360_cart>
-					</modules>
+					<module>Pure360_Cart</module>
+					<frontName>pure360_cart</frontName>
 				</args>
-			</adminhtml>
+			</pure360_cart>
 		</routers>
 	</admin>
 	<default>

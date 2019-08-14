@@ -8,7 +8,6 @@ namespace Pure360\Paint\Package\Context;
  * @package context
  * @subpackage facade
  *
- * @author	Stewart Waller	<stewart.waller@pure360.co.uk>
  */
 class Preference extends Pure360_Entity
 {

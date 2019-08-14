@@ -3,11 +3,10 @@
 /**
  * @package   Pure360\List
  * @copyright 2013 Pure360.com
- * @version   1.0.1
- * @author    Stewart Waller <stewart.waller@pure360.com>
  */
 class Pure360_List_Job_Sync extends Pure360_Cron_Job_Abstract
 {
+
 	const JOB_CODE = 'PURE360_LIST_SYNC';
 
 	const MODULE = 'PURE360_LIST';
@@ -38,30 +37,30 @@ class Pure360_List_Job_Sync extends Pure360_Cron_Job_Abstract
 		}
 
 		// Set job properties
-		$scope		= $this->_data->getScope();
-		$scopeId	= $this->_data->getScopeId();
-		$listId		= $this->_data->getJobData();
+		$scope = $this->_data->getScope();
+		$scopeId = $this->_data->getScopeId();
+		$listId = $this->_data->getJobData();
 
 		// Get API credentials
-		$filter		= ($scope === 'default' ? 'default_' : $scope . '_');
-		$url		= Mage::helper('pure360_common')->getScopedConfig('pure360/' . $filter . 'settings/api_url', $scope, $scopeId);
-		$username	= Mage::helper('pure360_common')->getScopedConfig('pure360/' . $filter . 'settings_marketing/username', $scope, $scopeId);
-		$password	= Mage::helper('pure360_common')->getScopedConfig('pure360/' . $filter . 'settings_marketing/password', $scope, $scopeId);
-	
+		$filter = ($scope === 'default' ? 'default_' : $scope . '_');
+		$url = Mage::helper('pure360_common')->getScopedConfig('pure360/' . $filter . 'settings/api_url', $scope, $scopeId);
+		$username = Mage::helper('pure360_common')->getScopedConfig('pure360/' . $filter . 'settings_marketing/username', $scope, $scopeId);
+		$password = Mage::helper('pure360_common')->getScopedConfig('pure360/' . $filter . 'settings_marketing/password', $scope, $scopeId);
+
 		// Set max page size
-		$this->max_sync_size = Mage::helper('pure360_common')->getScopedConfig('pure360/default_settings/max_sync_size', 'default', 0);		
-		
+		$this->max_sync_size = Mage::helper('pure360_common')->getScopedConfig('pure360/default_settings/max_sync_size', 'default', 0);
+
 		// Set client
 		$this->client = Mage::helper('pure360_common/api')->getClient($url, $username, $password);
 
 		// Load list
 		$list = Mage::getModel('pure360_list/list')->load($listId);
-		
+
 		// Set status to syncing
 		$list->rows = 0;
 		$list->setListStatus(Pure360_List_Model_List::LIST_STATUS_SYNCING);
 		$list->save();
-	
+
 		// Export all Customers first
 		$this->exportCustomerList($list);
 
@@ -118,7 +117,7 @@ class Pure360_List_Job_Sync extends Pure360_Cron_Job_Abstract
 					pcs.customer_id = ecs.customer_id AND
 					pcs.website_id = ecs.website_id
 				WHERE pcs.customer_id IS NULL;";
-		
+
 		$oldSegmentsSql = "SELECT DISTINCT pcs.customer_id
 			FROM pure360_list_customer_segments pcs 
 				LEFT JOIN enterprise_customersegment_customer ecs ON 
@@ -126,7 +125,7 @@ class Pure360_List_Job_Sync extends Pure360_Cron_Job_Abstract
 					pcs.customer_id = ecs.customer_id AND
 					pcs.website_id = ecs.website_id
 				WHERE ecs.customer_id IS NULL;";
-		
+
 		$diffSegmentsSql = "SELECT customer_id, count(*) cnt
 			FROM (
 					SELECT ecs.segment_id, ecs.customer_id, ecs.website_id, ecs.updated_date
@@ -137,26 +136,28 @@ class Pure360_List_Job_Sync extends Pure360_Cron_Job_Abstract
 			) pd
 			GROUP BY segment_id, customer_id, website_id
 			HAVING cnt > 1;";
-		
-		$queries = array( $newSegmentsSql, $oldSegmentsSql, $diffSegmentsSql);
-		
+
+		$queries = array($newSegmentsSql, $oldSegmentsSql, $diffSegmentsSql);
+
 		$model = Mage::getModel('customer/entity_setup', 'core_setup');
 
 		// Update Sync Statuses.
-		$customerEntityTable	= $resource->getTableName('customer_entity');
+		$customerEntityTable = $resource->getTableName('customer_entity');
 		$customerEntityIntTable = $resource->getTableName('customer_entity_int');
-		$attribute				= 'pure360_sync_status';
-		$attributeId			= $model->getAttributeId('customer', $attribute);
-		
+		$attribute = 'pure360_sync_status';
+		$attributeId = $model->getAttributeId('customer', $attribute);
+
 		foreach($queries as $query)
 		{
 			$ids = array();
-			$count= 0;
+			$count = 0;
 			$stmt = $read->query($query);
-			while ($row = $stmt->fetch()) {
+			while($row = $stmt->fetch())
+			{
 				$ids[] = $row['customer_id'];
 				$count++;
-				if ($count>1000) {
+				if($count > 1000)
+				{
 					$count = 0;
 
 					$sql = "INSERT INTO $customerEntityIntTable(entity_type_id, attribute_id, entity_id, value) 
@@ -169,7 +170,8 @@ class Pure360_List_Job_Sync extends Pure360_Cron_Job_Abstract
 					$ids = array();
 				}
 			}
-			if ($count>0) {
+			if($count > 0)
+			{
 				$sql = "INSERT INTO $customerEntityIntTable(entity_type_id, attribute_id, entity_id, value) 
 						SELECT 1, $attributeId, e.entity_id, 0 FROM $customerEntityTable AS e 
 						WHERE e.entity_id IN(" . implode(',', $ids) . ") 
@@ -180,7 +182,7 @@ class Pure360_List_Job_Sync extends Pure360_Cron_Job_Abstract
 		}
 		Mage::helper('pure360_list')->writeDebug(__METHOD__ . ' - end');
 	}
-	
+
 	private function copySegmentData()
 	{
 		Mage::helper('pure360_list')->writeDebug(__METHOD__ . ' - start');
@@ -190,33 +192,36 @@ class Pure360_List_Job_Sync extends Pure360_Cron_Job_Abstract
 		// Get handle for read
 		$read = $resource->getConnection('core_read');
 		$readTable = $resource->getTableName('enterprise_customersegment_customer');
-    
+
 		// Get handle for write
 		$write = $resource->getConnection('core_write');
-	   	$writeTable = $resource->getTableName('pure360_list_customer_segments');
-	
+		$writeTable = $resource->getTableName('pure360_list_customer_segments');
+
 		// Clean old table
 		$write->query("DELETE FROM $writeTable");
 
-        $data = array();
-        $count= 0;
-        $stmt = $read->query("SELECT * FROM $readTable");
-        while ($row = $stmt->fetch()) {
-            $data[] = $row;
-            $count++;
-            if ($count>1000) {
-                $count = 0;
-                $write->insertMultiple($writeTable, $data);
-                $data = array();
-            }
-        }
-        if ($count>0) {
-            $write->insertMultiple($writeTable, $data);
-        }
-		
+		$data = array();
+		$count = 0;
+		$stmt = $read->query("SELECT * FROM $readTable");
+		while($row = $stmt->fetch())
+		{
+			$data[] = $row;
+			$count++;
+			if($count > 1000)
+			{
+				$count = 0;
+				$write->insertMultiple($writeTable, $data);
+				$data = array();
+			}
+		}
+		if($count > 0)
+		{
+			$write->insertMultiple($writeTable, $data);
+		}
+
 		Mage::helper('pure360_list')->writeDebug(__METHOD__ . ' - end');
 	}
-	
+
 	private function exportCustomerList(&$list)
 	{
 		Mage::helper('pure360_list')->writeDebug(__METHOD__ . ' - start');
@@ -241,7 +246,6 @@ class Pure360_List_Job_Sync extends Pure360_Cron_Job_Abstract
 			if(empty($firstRow) || $firstEmail == $firstRow->getEmail())
 			{
 				break;
-				
 			} else
 			{
 				$firstEmail = $firstRow->getEmail();
@@ -250,11 +254,10 @@ class Pure360_List_Job_Sync extends Pure360_Cron_Job_Abstract
 			foreach($currentBatch as $customer)
 			{
 				if($list->rows < $this->max_sync_size)
-				{	
+				{
 					$data = $this->getCustomerData($customer, $list);
 					Mage::helper('pure360_common/file')->outputCSV($filePath, $data);
 					$list->rows++;
-					
 				} else
 				{
 					break;
@@ -269,7 +272,6 @@ class Pure360_List_Job_Sync extends Pure360_Cron_Job_Abstract
 			$batchNum++;
 
 			unset($currentBatch);
-			
 		} while($condition == $batchSize && $list->rows < $this->max_sync_size);
 
 		Mage::helper('pure360_list')->writeDebug(__METHOD__ . ' - end');
@@ -318,9 +320,9 @@ class Pure360_List_Job_Sync extends Pure360_Cron_Job_Abstract
 
 		// Get storeIds for list
 		$storeIds = Mage::helper('pure360_common')->getStoreIdsForScope($list->getScope(), $list->getScopeId());
-		
+
 		$collection->addAttributeToFilter('store_id', array('in' => $storeIds));
-		
+
 		// And filter by subscriber_status = 1
 		$collection->addAttributeToFilter('subscriber_status', array('eq' => Mage_Newsletter_Model_Subscriber::STATUS_SUBSCRIBED));
 
@@ -332,7 +334,7 @@ class Pure360_List_Job_Sync extends Pure360_Cron_Job_Abstract
 		{
 			$collection->addAttributeToFilter('email', array('like' => '%' . $list->getListFilter() . '%'));
 		}
-		
+
 		// Add paging for batch operation
 		$collection->setCurPage($batchNum)->setPageSize($batchSize);
 
@@ -362,31 +364,62 @@ class Pure360_List_Job_Sync extends Pure360_Cron_Job_Abstract
 		$segmentData = array('customer_segments' =>
 			Mage::helper('pure360_common')->arrayToCsv(
 					Mage::helper('pure360_list')->getCustomerSegmentData($customer)));
-		
+
 		$customerData = array_merge($customer->toArray(), $salesData, $groupData, $segmentData);
-		
-		// Get date key lookup:
+
+		// Get date key lookup
 		$dateKeyLookup = Mage::helper('pure360_list')->getDateKeyLookup();
-		
+
+		// Get dropdown key lookup
+		$dropdownKeyLookup = Mage::helper('pure360_list')->getDropdownKeyLookup();
+
+		// Get boolean key lookup
+		$booleanKeyLookup = Mage::helper('pure360_list')->getBooleanKeyLookup();
+
 		$dataToSend = array();
-	
+
 		foreach(Mage::helper('pure360_list')->getListKeys($list) as $key)
 		{
 			$val = '';
-			
+
 			if(isset($customerData[$key]))
 			{
 				$val = $customerData[$key];
-				if(!empty($val))
+
+				if(in_array($key, $booleanKeyLookup))
+				{
+					// Format to Yes/No
+					$val = is_null($val) || !$val ? 'No' : 'Yes';
+				} elseif(!empty($val))
 				{
 					if(in_array($key, $dateKeyLookup))
 					{
 						// Format to pure360 list date
-						$val = Mage::helper('pure360_list')->toDate($val);					
+						$val = Mage::helper('pure360_list')->toDate($val);
+					} elseif(in_array($key, $dropdownKeyLookup))
+					{
+						// Implode if array			
+						if(is_array($val))
+						{
+							$val = implode(',', array_filter($val));
+						} else
+						{
+							// Else clean string
+							$val = trim($val, ',');
+						}
+
+						// Get the option label
+						$val = Mage::getResourceSingleton('customer/customer')->getAttribute($key)->getSource()->getOptionText($val);
+
+						// Convert back to string
+						if(is_array($val))
+						{
+							$val = implode(',', array_filter($val));
+						}
 					}
 				}
 			}
-			$dataToSend[] = $val;
+			$dataToSend[$key] = $val;
 		}
 
 		// Get Website Name
@@ -412,15 +445,14 @@ class Pure360_List_Job_Sync extends Pure360_Cron_Job_Abstract
 		$store = $this->stores[$storeId];
 
 		$data = array_merge(
-					array(	'email'				=> $customer->getEmail(),
-							'store'				=> $store->getName(),
-							'website'			=> $website->getName(),
-							'subscription_date' => empty($customerData['subscription_date'])? 
-								'' : Mage::helper('pure360_list')->toDate($customerData['subscription_date']),
-							'customer_id'		=> $customer->getId()),
-					$dataToSend
-				);
-	
+				array('email' => $customer->getEmail(),
+			'store' => $store->getName(),
+			'website' => $website->getName(),
+			'subscription_date' => empty($customerData['subscription_date']) ?
+					'' : Mage::helper('pure360_list')->toDate($customerData['subscription_date']),
+			'customer_id' => $customer->getId()), $dataToSend
+		);
+
 		return $data;
 	}
 
@@ -472,7 +504,6 @@ class Pure360_List_Job_Sync extends Pure360_Cron_Job_Abstract
 			$batchNum++;
 
 			unset($currentBatch);
-			
 		} while($condition == $batchSize && $list->rows <= $this->max_sync_size);
 
 		Mage::helper('pure360_list')->writeDebug(__METHOD__ . ' - end');
@@ -486,7 +517,7 @@ class Pure360_List_Job_Sync extends Pure360_Cron_Job_Abstract
 
 		// Get storeIds for list
 		$storeIds = Mage::helper('pure360_common')->getStoreIdsForScope($list->getScope(), $list->getScopeId());
-		
+
 		// Configure Collection
 		$collection = Mage::getModel('newsletter/subscriber')->getCollection()
 				->addFieldToFilter('main_table.customer_id', array('eq' => 0))
@@ -501,7 +532,7 @@ class Pure360_List_Job_Sync extends Pure360_Cron_Job_Abstract
 		{
 			$collection->addFieldToFilter('subscriber_email', array('like' => '%' . $list->getListFilter() . '%'));
 		}
-		
+
 		// Add paging for batch operation
 		$collection->setCurPage($batchNum)->setPageSize($batchSize);
 
@@ -545,8 +576,8 @@ class Pure360_List_Job_Sync extends Pure360_Cron_Job_Abstract
 		$dataToSend = array('email' => $subscriber->getSubscriberEmail(),
 			'store' => $store->getName(),
 			'website' => $website->getName(),
-			'subscription_date' => empty($subDate)? 
-								'' : Mage::helper('pure360_list')->toDate($subDate));
+			'subscription_date' => empty($subDate) ?
+					'' : Mage::helper('pure360_list')->toDate($subDate));
 
 		return $dataToSend;
 	}
@@ -556,7 +587,7 @@ class Pure360_List_Job_Sync extends Pure360_Cron_Job_Abstract
 		Mage::helper('pure360_list')->writeDebug(__METHOD__ . ' - start');
 
 		// Get list properties
-		$listName	= $list->getListName();
+		$listName = $list->getListName();
 		$listFields = $list->getListFields();
 		$files = Mage::helper('pure360_common/file')->getFilenamesForSlug($list->fileSlug);
 
@@ -607,7 +638,7 @@ class Pure360_List_Job_Sync extends Pure360_Cron_Job_Abstract
 		$files = Mage::helper('pure360_common/file')->getFilenamesForSlug($list->fileSlug);
 
 		$count = 0;
-		
+
 		// Mark customers as synced
 		foreach($files as $filename)
 		{
@@ -631,14 +662,18 @@ class Pure360_List_Job_Sync extends Pure360_Cron_Job_Abstract
 				}
 
 				// Update Sync Statuses.
-				$newsletterSubscriberTable	= $resource->getTableName('newsletter_subscriber');
-				
-				$sql = "UPDATE $newsletterSubscriberTable
-					SET pure360_sync_status = 1
-					WHERE subscriber_email IN('" . implode('\',\'', $emails) . "')";
+				$newsletterSubscriberTable = $resource->getTableName('newsletter_subscriber');
+				$stmt = $write->prepare("UPDATE $newsletterSubscriberTable SET pure360_sync_status = 1 WHERE `subscriber_email` = :email");
+				$email = null;
+				$stmt->bindParam(":email", $email, PDO::PARAM_STR);
 
-				$write->query($sql);
-				
+				foreach($emails as $email)
+				{
+					if(!empty($email))
+					{
+						$stmt->execute();
+					}
+				}
 			} else
 			{
 				$ids = array();
@@ -659,25 +694,25 @@ class Pure360_List_Job_Sync extends Pure360_Cron_Job_Abstract
 				$model = Mage::getModel('customer/entity_setup', 'core_setup');
 
 				// Update Sync Statuses.
-				$customerEntityTable	= $resource->getTableName('customer_entity');
+				$customerEntityTable = $resource->getTableName('customer_entity');
 				$customerEntityIntTable = $resource->getTableName('customer_entity_int');
-				$attribute				= 'pure360_sync_status';
-				$attributeId			= $model->getAttributeId('customer', $attribute);
-				
+				$attribute = 'pure360_sync_status';
+				$attributeId = $model->getAttributeId('customer', $attribute);
+
 				$sql = "DELETE at_pure360_sync_status FROM $customerEntityTable AS e
 						LEFT JOIN $customerEntityIntTable AS at_pure360_sync_status ON (at_pure360_sync_status.entity_id = e.entity_id)  
 						WHERE (at_pure360_sync_status.attribute_id = $attributeId) 
 						AND e.entity_id IN(" . implode(',', $ids) . ")";
 
 				$write->query($sql);
-				
+
 				$sql = "INSERT INTO $customerEntityIntTable(entity_type_id, attribute_id, entity_id, value)
 						SELECT 1,$attributeId, e.entity_id, 1 FROM $customerEntityTable AS e
 						WHERE e.entity_id IN(" . implode(',', $ids) . ")";
 
 				$write->query($sql);
 			}
-			
+
 			if($count >= $list->rows)
 			{
 				break;

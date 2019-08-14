@@ -3,8 +3,6 @@
 /**
  * @package   Pure360\Common
  * @copyright 2013 Pure360.com
- * @version   1.0.1
- * @author    Stewart Waller <stewart.waller@pure360.com>
  */
 class Pure360_Common_Helper_Data extends Mage_Core_Helper_Abstract
 {
@@ -22,7 +20,7 @@ class Pure360_Common_Helper_Data extends Mage_Core_Helper_Abstract
 	 */
 	protected function getModuleName()
 	{
-		return 'pure360';
+		return 'pure360_common';
 	}
 
 	/**
@@ -33,9 +31,9 @@ class Pure360_Common_Helper_Data extends Mage_Core_Helper_Abstract
 	{
 		$modules = (array) Mage::getConfig()->getNode('modules')->children();
 
-		if ($moduleName === null)
+		if (is_null($moduleName))
 		{
-			$moduleName = $this->getModuleName();
+			$moduleName = str_replace(" ", "_", ucwords(str_replace("_", " ", $this->getModuleName())));
 		}
 
 		return isset($modules[$moduleName]) ? (string) $modules[$moduleName]->version : null;

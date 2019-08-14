@@ -3,7 +3,6 @@
 /**
  * Description of Other
  *
- * @author stewart.waller
  */
 class Pure360_Package_Other extends Pure360_Package
 {

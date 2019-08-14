@@ -7,7 +7,6 @@
  * @package context
  * @subpackage facade
  *
- * @author	Stewart Waller	<stewart.waller@pure360.co.uk>
  */
 class Pure360_Package_Context_Context extends Pure360_Entity
 {

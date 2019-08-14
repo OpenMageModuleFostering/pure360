@@ -2,7 +2,7 @@
 <config>
 	<modules>
 		<Pure360_List>
-			<version>1.0.1</version>
+			<version>1.0.2</version>
 		</Pure360_List>
 	</modules>
 	<global>
@@ -146,13 +146,13 @@
 	</adminhtml>
 	<admin>
 		<routers>
-			<adminhtml>
+			<pure360_list>
+				<use>admin</use>
 				<args>
-					<modules>
-						<pure360_list before="Mage_Adminhtml">Pure360_List_Adminhtml</pure360_list>
-					</modules>
+					<module>Pure360_List</module>
+					<frontName>pure360_list</frontName>
 				</args>
-			</adminhtml>
+			</pure360_list>
 		</routers>
 	</admin>
 	<default>

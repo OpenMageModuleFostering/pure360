@@ -2,7 +2,7 @@
 <config>
 	<modules>
 		<Pure360_Newsletter>
-			<version>1.0.1</version>
+			<version>1.0.2</version>
 		</Pure360_Newsletter>
 	</modules>
 	<global>
@@ -113,13 +113,13 @@
 	</adminhtml>	
 	<admin>
 		<routers>
-			<adminhtml>
+			<pure360_newsletter>
+				<use>admin</use>
 				<args>
-					<modules>
-						<pure360_newsletter before="Mage_Adminhtml">Pure360_Newsletter_Adminhtml</pure360_newsletter>
-					</modules>
+					<module>Pure360_Newsletter</module>
+					<frontName>pure360_newsletter</frontName>
 				</args>
-			</adminhtml>
+			</pure360_newsletter>
 		</routers>
 	</admin>
 	<default>

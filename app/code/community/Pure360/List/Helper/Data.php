@@ -3,8 +3,6 @@
 /**
  * @package   Pure360\List
  * @copyright 2013 Pure360.com
- * @version   1.0.1
- * @author    Stewart Waller <stewart.waller@pure360.com>
  */
 class Pure360_List_Helper_Data extends Pure360_Common_Helper_Data
 {
@@ -196,6 +194,84 @@ class Pure360_List_Helper_Data extends Pure360_Common_Helper_Data
 		return $dateKeys;
 	}
 
+	/**
+	 * 
+	 * @return array
+	 */
+	public function getDropdownKeyLookup()
+	{
+		$dropdownKeys = array();
+
+		$m = Mage::getSingleton('eav/config')
+				->getEntityType('customer')
+				->getAttributeCollection()
+				->addSetInfo();
+
+		foreach ($m as $attr)
+		{
+			// if input type for this attribute is dropdown or multi-select
+			if ($attr->usesSource()) 
+			{
+				$dropdownKeys[] = $attr->getAttributeCode();
+			}
+		}
+
+		$m = Mage::getSingleton('eav/config')
+			->getEntityType('customer_address')
+			->getAttributeCollection()
+			->addSetInfo();
+
+		foreach ($m as $attr)
+		{
+			// if input type for this attribute is dropdown or multi-select
+			if ($attr->usesSource()) 
+			{
+				$dropdownKeys[] = $attr->getAttributeCode();
+			}
+		}
+
+		return $dropdownKeys;
+	}
+
+	/**
+	 * 
+	 * @return array
+	 */
+	public function getBooleanKeyLookup()
+	{
+		$booleanKeys = array();
+
+		$m = Mage::getSingleton('eav/config')
+				->getEntityType('customer')
+				->getAttributeCollection()
+				->addSetInfo();
+
+		foreach ($m as $attr)
+		{
+			// if input type for this attribute is dropdown or multi-select
+			if ($attr->getFrontendInput() == 'boolean') 
+			{
+				$booleanKeys[] = $attr->getAttributeCode();
+			}
+		}
+
+		$m = Mage::getSingleton('eav/config')
+			->getEntityType('customer_address')
+			->getAttributeCollection()
+			->addSetInfo();
+
+		foreach ($m as $attr)
+		{
+			// if input type for this attribute is dropdown or multi-select
+			if ($attr->getFrontendInput() == 'boolean') 
+			{
+				$booleanKeys[] = $attr->getAttributeCode();
+			}
+		}
+
+		return $booleanKeys;
+	}
+	
 	/**
 	 * 
 	 * @param type $list

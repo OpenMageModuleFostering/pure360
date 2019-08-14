@@ -6,7 +6,6 @@
  * @package other
  * @subpackage facade
  *
- * @author	Stewart Waller	<stewart.waller@pure360.co.uk>
  */
 class Pure360_Package_Data_Scheduler extends Pure360_Entity
 {

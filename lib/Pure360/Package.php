@@ -7,5 +7,3 @@ abstract class Pure360_Package
 
 	}
 }
-
-?>

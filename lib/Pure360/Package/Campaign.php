@@ -3,7 +3,6 @@
 /**
  * Description of Campaign
  *
- * @author stewart.waller
  */
 class Pure360_Package_Campaign extends Pure360_Package
 {

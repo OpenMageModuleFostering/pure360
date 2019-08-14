@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Pure360_Email>
-            <version>1.0.1</version>
+            <version>1.0.2</version>
         </Pure360_Email>
     </modules>
     <global>
@@ -97,13 +97,13 @@
 	</adminhtml>
 	<admin>
 		<routers>
-			<adminhtml>
+			<pure360_email>
+				<use>admin</use>
 				<args>
-					<modules>
-						<pure360_email before="Mage_Adminhtml">Pure360_Email_Adminhtml</pure360_email>
-					</modules>
+					<module>Pure360_Email</module>
+					<frontName>pure360_email</frontName>
 				</args>
-			</adminhtml>
+			</pure360_email>
 		</routers>
 	</admin>
 	<default>

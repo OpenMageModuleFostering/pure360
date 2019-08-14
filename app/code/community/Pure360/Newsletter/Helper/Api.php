@@ -3,8 +3,6 @@
 /**
  * @package   Pure360\Newsletter
  * @copyright 2013 Pure360.com
- * @version   1.0.1
- * @author    Stewart Waller <stewart.waller@pure360.com>
  */
 class Pure360_Newsletter_Helper_Api extends Pure360_Common_Helper_Api
 {

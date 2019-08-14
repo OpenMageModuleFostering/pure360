@@ -3,8 +3,6 @@
 /**
  * @package   Pure360\Cart
  * @copyright 2013 Pure360.com
- * @version   1.0.1
- * @author    Stewart Waller <stewart.waller@pure360.com>
  */
 class Pure360_Cart_Block_Email_Order_Items extends Mage_Sales_Block_Items_Abstract
 {

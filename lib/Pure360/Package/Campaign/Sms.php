@@ -6,7 +6,6 @@
  * @package campaign
  * @subpackage facade
  *
- * @author	Stewart Waller	<stewart.waller@pure360.com>
  */
 class Pure360_Package_Campaign_Sms extends Pure360_Entity
 {

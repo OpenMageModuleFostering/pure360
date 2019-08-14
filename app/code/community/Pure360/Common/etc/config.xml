@@ -2,7 +2,7 @@
 <config>
 	<modules>
 		<Pure360_Common>
-			<version>1.0.1</version>
+			<version>1.0.2</version>
 		</Pure360_Common>
 	</modules>
 	<global>
@@ -96,6 +96,17 @@
 			</updates>
 		</layout>
 	</adminhtml>
+	<admin>
+		<routers>
+			<pure360_common>
+				<use>admin</use>
+				<args>
+					<module>Pure360_Common</module>
+					<frontName>pure360</frontName>
+				</args>
+			</pure360_common>
+		</routers>
+	</admin>
 	<default>
 		<pure360>
 			<default_settings>

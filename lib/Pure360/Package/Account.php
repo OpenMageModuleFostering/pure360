@@ -3,7 +3,6 @@
 /**
  * Description of Account
  *
- * @author stewart.waller
  */
 class Pure360_Package_Account extends Pure360_Package
 {
