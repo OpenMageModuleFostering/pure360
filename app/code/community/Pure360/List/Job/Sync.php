@@ -292,7 +292,7 @@ class Pure360_List_Job_Sync extends Pure360_Cron_Job_Abstract
 		;
 
 		// Add Default Select
-		$collection
+		$collection->distinct(true)
 				->addAttributeToSelect('email')
 				->addAttributeToSelect('store_id')
 				->addAttributeToSelect('website_id')
@@ -409,7 +409,12 @@ class Pure360_List_Job_Sync extends Pure360_Cron_Job_Abstract
 						}
 
 						// Get the option label
-						$val = Mage::getResourceSingleton('customer/customer')->getAttribute($key)->getSource()->getOptionText($val);
+						$attr = Mage::getResourceSingleton('customer/customer')->getAttribute($key);
+						
+						if(!empty($attr))
+						{
+							$val = $attr->getSource()->getOptionText($val);
+						}
 
 						// Convert back to string
 						if(is_array($val))
@@ -520,6 +525,7 @@ class Pure360_List_Job_Sync extends Pure360_Cron_Job_Abstract
 
 		// Configure Collection
 		$collection = Mage::getModel('newsletter/subscriber')->getCollection()
+				->distinct(true)
 				->addFieldToFilter('main_table.customer_id', array('eq' => 0))
 				->addFieldToFilter('subscriber_status', array('eq' => Mage_Newsletter_Model_Subscriber::STATUS_SUBSCRIBED))
 				->addStoreFilter($storeIds);

@@ -410,12 +410,21 @@ class Pure360_Common_Helper_Data extends Mage_Core_Helper_Abstract
 	 * @param string|null      $file
 	 * @return bool|void
 	 */
-	public function writeError($message, $file = 'error')
+	public function writeError($error, $file = 'error')
 	{
-		if (is_object($message) && $message instanceOf Exception)
+		$message = '';
+		$backtrace = '';
+		
+		if (is_object($error) && $error instanceOf Exception)
 		{
-			$message = $message->getMessage();
+			$message = $error->getMessage();
+			$backtrace = '\n' . $error->getTraceAsString();
+			
+		} else
+		{
+			$message = $error;
 		}
+		
 		if ($this->isNoticesEnabled())
 		{
 			if (Mage::getSingleton('admin/session')->isLoggedIn())
@@ -423,12 +432,14 @@ class Pure360_Common_Helper_Data extends Mage_Core_Helper_Abstract
 				/* @var $message Mage_Core_Model_Message_Error */
 				$message = Mage::getSingleton('core/message')->error("[Pure360] {$message}");
 				Mage::getSingleton('adminhtml/session')->addMessage($message);
+				
 			} else
 			{
 				Mage::getSingleton('core/session')->addError("[Pure360] {$message}");
 			}
 		}
-		return $this->writeLog($message, $file, Zend_Log::ERR);
+		
+		return $this->writeLog($message . $backtrace, $file, Zend_Log::ERR);
 	}
 
 	/**

@@ -103,20 +103,26 @@ foreach($oldAttributes as $oldAttribute)
 }
 
 // Add attributes to customer
-$model->addAttribute(
-		'customer', 'pure360_sync_status', array(
-	'group' => 'Default',
-	'type' => 'int',
-	'label' => 'Pure360 Sync Status',
-	'input' => 'select',
-	'source' => 'eav/entity_attribute_source_boolean',
-	'global' => Mage_Catalog_Model_Resource_Eav_Attribute::SCOPE_STORE,
-	'required' => 0,
-	'default' => 0,
-	'visible_on_front' => 0,
-	'used_for_price_rules' => 0,
-	'adminhtml_only' => 1,
-		)
-);
+try
+{
+	$model->addAttribute(
+			'customer', 'pure360_sync_status', array(
+		'group' => 'Default',
+		'type' => 'int',
+		'label' => 'Pure360 Sync Status',
+		'input' => 'select',
+		'source' => 'eav/entity_attribute_source_boolean',
+		'global' => Mage_Catalog_Model_Resource_Eav_Attribute::SCOPE_STORE,
+		'required' => 0,
+		'default' => 0,
+		'visible_on_front' => 0,
+		'used_for_price_rules' => 0,
+		'adminhtml_only' => 1,
+			)
+	);
+} catch(Exception $e)
+{
+	
+}
 
 $installer->endSetup();

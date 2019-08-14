@@ -222,6 +222,7 @@ class Pure360_Cron_Model_Observer extends Mage_Core_Model_Abstract
 				$job->setStatus(Mage_Cron_Model_Schedule::STATUS_SUCCESS);
 				$job->setFinishedAt($finish);
 				$job->save();
+				
 			} catch(Pure360_Exception_ValidationException $ve)
 			{
 				$errorMessage = $ve->getMessage() . ': ';
@@ -230,9 +231,11 @@ class Pure360_Cron_Model_Observer extends Mage_Core_Model_Abstract
 				{
 					$errorMessage .= $error . ' [' . $message . "]; \n";
 				}
+
 			} catch(Exception $e)
 			{
 				$errorMessage = $e->getMessage();
+				Mage::helper('pure360_common')->writeError($e);
 			}
 
 			if(!is_null($errorMessage))
