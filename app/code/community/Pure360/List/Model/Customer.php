@@ -13,24 +13,14 @@ class Pure360_List_Model_Customer extends Mage_Customer_Model_Customer
 	 */
 	protected function _beforeSave()
 	{
-		parent::_beforeSave();
-
-		if (Mage::helper('pure360_list')->isEnabledForStore($this->getStoreId()))
+		if(parent::_beforeSave())
 		{
-			$this->setPure360SyncStatus(0);
+			if (Mage::helper('pure360_list')->isEnabledForStore($this->getStoreId()))
+			{
+				$this->setPure360SyncStatus(0);
+			}
 		}
-		
 		return $this;
-	}
-
-	/**
-	 * Processing object after delete data
-	 *
-	 * @return Pure360_List_Model_Customer
-	 */
-	protected function _afterDelete()
-	{
-		parent::_afterDelete();
 	}
 }
 

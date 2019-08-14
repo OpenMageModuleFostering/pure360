@@ -406,6 +406,29 @@ class Pure360_List_Helper_Data extends Pure360_Common_Helper_Data
 		return $list;
 	}
 	
+	/**
+	 * Add email address to optout list
+	 * @param string $email
+	 * @param integer $storeId
+	 */
+	public function listOptout($email, $storeId)
+	{
+		Mage::helper('pure360_list')->writeDebug(__METHOD__ . ' - start');
+
+		$list = $this->getListForStore($storeId);
+		
+		/* @var $job Pure360_List_Model_Optout */
+		$optout = Mage::getModel('pure360_list/optout');
+		$optout->setData('scope', $list->getScope());
+		$optout->setData('scope_id', $list->getScopeId());
+		$optout->setData('email', $email);
+		$optout->setCreatedAt(time());
+		$optout->setUpdatedAt(time());
+		$optout->save();
+
+		Mage::helper('pure360_list')->writeDebug(__METHOD__ . ' - end');
+	}
+	
 	public function toDate($value)
 	{
 		$date = date_create($value);

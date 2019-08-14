@@ -2,7 +2,7 @@
 <config>
 	<modules>
 		<Pure360_Newsletter>
-			<version>1.0.3</version>
+			<version>1.1.0</version>
 		</Pure360_Newsletter>
 	</modules>
 	<global>
@@ -92,7 +92,7 @@
 							<children>
 								<config>
 									<children>
-										<pure360_newsletter module="pure360_newsletterr">
+										<pure360_newsletter module="pure360_newsletter">
 											<title>Pure360 Newsletter Options Section</title>
 										</pure360_newsletter>
 									</children>

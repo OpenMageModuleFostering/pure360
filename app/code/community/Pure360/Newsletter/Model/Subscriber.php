@@ -6,6 +6,7 @@
  */
 class Pure360_Newsletter_Model_Subscriber extends Mage_Newsletter_Model_Subscriber
 {
+
 	/**
 	 * Override default subscribe action.
 	 */
@@ -18,7 +19,7 @@ class Pure360_Newsletter_Model_Subscriber extends Mage_Newsletter_Model_Subscrib
 				if($this->getIsStatusChanged() && $this->getStatus() == self::STATUS_SUBSCRIBED)
 				{
 					$this->tagSubscription();
-					
+
 					if(Mage::app()->getWebsite()->getCode() !== 'admin')
 					{
 						if($callback)
@@ -42,20 +43,44 @@ class Pure360_Newsletter_Model_Subscriber extends Mage_Newsletter_Model_Subscrib
 		{
 			if(Mage::helper('pure360_newsletter')->isEnabledForStore($customer->getStoreId()))
 			{
-				if($this->getIsStatusChanged() && $this->getStatus() == self::STATUS_SUBSCRIBED)
+				if($this->getIsStatusChanged())
 				{
-					$this->tagSubscription();
-					
-					if(Mage::app()->getWebsite()->getCode() !== 'admin')
-					{	
-						if($callback)
+					switch($this->getStatus())
+					{
+						case self::STATUS_SUBSCRIBED: 
 						{
-							$client = Mage::helper('pure360_common/api')->getClientForWebsite();
-							Mage::helper('pure360_newsletter/api')->listSubscribeCustomer($client, $customer, $this->getSubscriptionDate());
+							$this->tagSubscription();
+
+							if(Mage::app()->getWebsite()->getCode() !== 'admin')
+							{
+								if($callback)
+								{
+									$client = Mage::helper('pure360_common/api')->getClientForWebsite();
+									Mage::helper('pure360_newsletter/api')->listSubscribeCustomer($client, $customer, $this->getSubscriptionDate(), true);
+								}
+							}
+
+							$customer->save();
+							break;
+						}
+						case self::STATUS_UNSUBSCRIBED: 
+						{
+							if(Mage::app()->getWebsite()->getCode() !== 'admin')
+							{
+								if($callback)
+								{
+									$client = Mage::helper('pure360_common/api')->getClientForWebsite();
+									Mage::helper('pure360_newsletter/api')->listSubscribeCustomer($client, $customer, $this->getSubscriptionDate(), false);
+								}
+							}
+
+							// Add to optout list to make sure
+							Mage::helper('pure360_list')->listOptout($this->getSubscriberEmail(), $customer->getStoreId());
+							
+							$customer->save();
+							break;
 						}
 					}
-					
-					$customer->save();
 				}
 			}
 		}
@@ -70,13 +95,13 @@ class Pure360_Newsletter_Model_Subscriber extends Mage_Newsletter_Model_Subscrib
 		if(parent::unsubscribe())
 		{
 			$storeId = $this->getStoreId();
-			
+
 			if($this->getCustomerId())
 			{
 				$customer = Mage::getModel('customer/customer')->load($this->getCustomerId());
-				$storeId = $customer->getStoreId();	
+				$storeId = $customer->getStoreId();
 			}
-			
+
 			if(Mage::helper('pure360_newsletter')->isEnabledForStore($storeId))
 			{
 				if($this->getStatus() == self::STATUS_UNSUBSCRIBED)
@@ -89,6 +114,9 @@ class Pure360_Newsletter_Model_Subscriber extends Mage_Newsletter_Model_Subscrib
 							Mage::helper('pure360_newsletter/api')->listSubscribe($client, $this, false);
 						}
 					}
+					
+					// Add to optout list to make sure
+					Mage::helper('pure360_list')->listOptout($this->getSubscriberEmail(), $storeId);
 				}
 			}
 		}
@@ -107,6 +135,8 @@ class Pure360_Newsletter_Model_Subscriber extends Mage_Newsletter_Model_Subscrib
 	/**
 	 * Suppress default confirmation success email function if Pure360 
 	 * module is active.
+	 * 
+	 * @return Pure360_Newsletter_Model_Subscriber
 	 */
 	public function sendConfirmationSuccessEmail()
 	{
@@ -123,52 +153,18 @@ class Pure360_Newsletter_Model_Subscriber extends Mage_Newsletter_Model_Subscrib
 	/**
 	 * Suppress default unsubscribe confirmation email function if Pure360 
 	 * module is active.
+	 * 
+	 * @return Pure360_Newsletter_Model_Subscriber
 	 */
 	public function sendUnsubscriptionEmail()
 	{
 		if(Mage::helper('pure360_newsletter')->isEnabledForStore($this->getStoreId()))
 		{
 			return $this;
+			
 		} else
 		{
 			return parent::sendUnsubscriptionEmail();
 		}
 	}
-
-	/**
-	 * Processing object before save data
-	 *
-	 */
-	protected function _beforeSave()
-	{
-		parent::_beforeSave();
-
-		if(Mage::helper('pure360_newsletter')->isEnabledForStore($this->getStoreId()))
-		{
-			$this->setPure360SyncStatus(0);
-
-			// Trigger Pure360 sync status for customer too
-			if($this->getCustomerId() > 0)
-			{
-				$customer = Mage::getModel('customer/customer')->load($this->getCustomerId());
-				if($customer->getId())
-				{
-					$customer->save();
-				}
-			}
-		}
-
-		return $this;
-	}
-	
-	/**
-	 * Processing object after delete data
-	 *
-	 * @return Pure360_Newsletter_Model_Subscriber
-	 */
-	protected function _afterDelete()
-	{
-		parent::_afterDelete();
-	}
-
 }

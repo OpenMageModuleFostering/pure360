@@ -58,6 +58,7 @@ class Pure360_List_Job_Sync extends Pure360_Cron_Job_Abstract
 
 		// Set status to syncing
 		$list->rows = 0;
+		$list->optout_rows = 0;
 		$list->setListStatus(Pure360_List_Model_List::LIST_STATUS_SYNCING);
 		$list->save();
 
@@ -67,6 +68,9 @@ class Pure360_List_Job_Sync extends Pure360_Cron_Job_Abstract
 		// Export all Subscribers next
 		$this->exportSubscriberList($list);
 
+		// Finally all Optouts
+		$this->exportOptoutList($list);
+		
 		// Sync List
 		if($list->rows > 0)
 		{
@@ -80,11 +84,17 @@ class Pure360_List_Job_Sync extends Pure360_Cron_Job_Abstract
 			$list->save();
 		}
 
+		// Upload Optouts
+		if($list->optout_rows > 0)
+		{
+			$this->uploadOptouts($list);
+		}
+		
 		// Finally perform a logout
 		$this->client->logout();
 
 		// Update message with rows uploaded
-		$this->_data->setData('message', $list->rows . ' rows uploaded ');
+		$this->_data->setData('message', $list->rows . ' rows processed, ' . $list->optout_rows . ' rows opted out ');
 
 		// Save list data
 		$this->_data->save();
@@ -588,6 +598,108 @@ class Pure360_List_Job_Sync extends Pure360_Cron_Job_Abstract
 		return $dataToSend;
 	}
 
+	private function exportOptoutList(&$list)
+	{
+		Mage::helper('pure360_list')->writeDebug(__METHOD__ . ' - start');
+
+		$resource = Mage::getSingleton('core/resource');
+
+		// Get handle for write
+		$write = $resource->getConnection('core_write');
+
+		// Clean invalid optouts
+		$optoutTable = $resource->getTableName('pure360_optout');
+		$subscriberTable = $resource->getTableName('newsletter_subscriber');
+
+		$stmt = $write->prepare("DELETE e FROM $optoutTable AS e " .
+				" LEFT JOIN $subscriberTable AS s ON (s.subscriber_email = e.email) " .
+				" WHERE s.subscriber_status = :status AND e.scope = :scope AND e.scope_id = :scopeId ");
+
+		$status = Mage_Newsletter_Model_Subscriber::STATUS_SUBSCRIBED;
+		
+		$stmt->bindParam(":status", $status, PDO::PARAM_INT);
+		$stmt->bindParam(":scope", $list->getScope(), PDO::PARAM_STR);
+		$stmt->bindParam(":scopeId", $list->getScopeId(), PDO::PARAM_INT);
+
+		$stmt->execute();
+		
+		// Export optout list
+		$fileSlug = $list->fileSlug . '__OPTOUT__';
+
+		$file_ext = '.csv';
+		$batchNum = 1;
+		$batchSize = self::CHUNK_SIZE;
+		$firstEmail = null;
+
+		do
+		{
+			$time_start = microtime(true);
+			$currentBatch = $this->getOptoutBatch($list, $batchSize, $batchNum);
+			$condition = count($currentBatch);
+			$filePath = Mage::helper('pure360_common/file')->getFilePath($fileSlug . $batchNum . $file_ext);
+
+			$firstRow = reset($currentBatch);
+
+			if(empty($firstRow) || $firstEmail == $firstRow)
+			{
+				break;
+			} else
+			{
+				$firstEmail = $firstRow;
+			}
+
+			foreach($currentBatch as $email)
+			{
+				if($list->optout_rows < $this->max_sync_size)
+				{
+					Mage::helper('pure360_common/file')->outputCSV($filePath, array($email));
+					$list->optout_rows++;
+				} else
+				{
+					break;
+				}
+			}
+
+			$time_end = microtime(true);
+			$time_in_seconds = $time_end - $time_start;
+
+			Mage::helper('pure360_list')->writeDebug('Exported Optout Batch ' . $batchNum . ' in ' . $time_in_seconds . ' seconds - (' . memory_get_usage() . ') to ' . $filePath);
+
+			$batchNum++;
+
+			unset($currentBatch);
+		} while($condition == $batchSize && $list->optout_rows <= $this->max_sync_size);
+
+		Mage::helper('pure360_list')->writeDebug(__METHOD__ . ' - end');
+	}
+
+	private function getOptoutBatch($list, $batchSize = 0, $batchNum = 1)
+	{
+		Mage::helper('pure360_list')->writeDebug(__METHOD__ . ' - start');
+
+		$emails = array();
+
+		// Configure Collection
+		$collection = Mage::getModel('pure360_list/optout')->getCollection()
+				->distinct(true)
+				->addScopeFilter($list->getScope(), $list->getScopeId());
+
+		// Add paging for batch operation
+		$collection->setCurPage($batchNum)->setPageSize($batchSize);
+
+		// Get email for each item in collection
+		foreach($collection as $row)
+		{
+			$emails[] = $row->getEmail();
+		}
+
+		unset($collection);
+
+		Mage::helper('pure360_list')->writeDebug(__METHOD__ . ' - end');
+
+		return $emails;
+	}
+	
 	private function uploadList(&$list)
 	{
 		Mage::helper('pure360_list')->writeDebug(__METHOD__ . ' - start');
@@ -645,12 +757,38 @@ class Pure360_List_Job_Sync extends Pure360_Cron_Job_Abstract
 
 		$count = 0;
 
-		// Mark customers as synced
 		foreach($files as $filename)
 		{
 			$dataArray = Mage::helper('pure360_common/file')->readCsv($filename);
+			
+			// Remove optouts
+			if(strstr($filename, 'OPTOUT'))
+			{
+				$emails = array();
 
-			if(strstr($filename, 'subscribe'))
+				foreach($dataArray as $dataRow)
+				{
+					// Email should always be the only column for optout
+					$emails[] = $dataRow[0];
+				}
+
+				// Update Sync Statuses.
+				$optoutTable = $resource->getTableName('pure360_optout');
+				$stmt = $write->prepare("DELETE FROM $optoutTable WHERE `email` = :email AND `scope` = :scope AND `scope_id` = :scopeId ");
+				$email = null;
+				$stmt->bindParam(":email", $email, PDO::PARAM_STR);
+				$stmt->bindParam(":scope", $list->getScope(), PDO::PARAM_STR);
+				$stmt->bindParam(":scopeId", $list->getScopeId(), PDO::PARAM_INT);
+				
+				foreach($emails as $email)
+				{
+					if(!empty($email))
+					{
+						$stmt->execute();
+					}
+				}
+			// Mark subscribers as synced	
+			} else if(strstr($filename, 'subscribe'))
 			{
 				$emails = array();
 
@@ -680,6 +818,7 @@ class Pure360_List_Job_Sync extends Pure360_Cron_Job_Abstract
 						$stmt->execute();
 					}
 				}
+			// Mark customers as synced
 			} else
 			{
 				$ids = array();
@@ -724,6 +863,49 @@ class Pure360_List_Job_Sync extends Pure360_Cron_Job_Abstract
 				break;
 			}
 		}
+
+		Mage::helper('pure360_list')->writeDebug(__METHOD__ . ' - end');
+
+		return;
+	}
+
+	private function uploadOptouts(&$list)
+	{
+		Mage::helper('pure360_list')->writeDebug(__METHOD__ . ' - start');
+
+		// Get list properties
+		$listName	= '__OPTOUT__';
+		$listFields = array('email');
+		$files = Mage::helper('pure360_common/file')->getFilenamesForSlug($list->fileSlug . '__OPTOUT__');
+
+		/* @var $api Pure360_List_Helper_Api */
+		$api = Mage::helper('pure360_list/api');
+
+		// Setup file transfer
+		$context = $this->client->getContext();
+		$fileCategory = "PAINT";
+		$fileName = $context['beanId'] . '__OPTOUT__';
+		$count = count($files);
+		$page = 1;
+
+		// Create file
+		$api->createFile($this->client, $fileCategory, $fileName, $count, "Y");
+
+		// Upload chunks
+		foreach($files as $filename)
+		{
+			$chunkData = Mage::helper('pure360_common/file')->readFile($filename, true);
+			$api->uploadFileChunk($this->client, $fileCategory, $fileName, $page, $chunkData, "base64");
+			$page++;
+		}
+
+		reset($files);
+
+		// Create/Append list		
+		$api->createAppendReplaceList($this->client, $listName, $listFields);
+
+		// Load file data onto list
+		$api->loadFileData($this->client, $fileCategory, $fileName, $listName);
 
 		Mage::helper('pure360_list')->writeDebug(__METHOD__ . ' - end');
 

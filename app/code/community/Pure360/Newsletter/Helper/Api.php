@@ -79,7 +79,7 @@ class Pure360_Newsletter_Helper_Api extends Pure360_Common_Helper_Api
 	 * @param Mage_Customer_Model_Customer $customer
 	 * @return type
 	 */
-	public function listSubscribeCustomer($client, $customer, $date)
+	public function listSubscribeCustomer($client, $customer, $date, $subscribe = true)
 	{
 		Mage::helper('pure360_newsletter')->writeDebug(__METHOD__ . ' - start');
 
@@ -116,50 +116,60 @@ class Pure360_Newsletter_Helper_Api extends Pure360_Common_Helper_Api
 				$postFields .= '&website=' . urlencode(Mage::app()->getWebsite($websiteId)->getName());
 				$postFields .= '&store=' . urlencode($store->getName());
 
-				// Process Customer
-				$salesFields = Mage::helper('pure360_list')->getSalesFields($list);
-
-				$salesData = empty($salesFields) ? array() : Mage::helper('pure360_list')->getSalesData($customer, $salesFields);
-
-				$groupData = array('customer_group' =>
-					Mage::helper('pure360_common')->arrayToCsv(
-							Mage::helper('pure360_list')->getCustomerGroupData($customer)));
-
-				$segmentData = array('customer_segments' =>
-					Mage::helper('pure360_common')->arrayToCsv(
-							Mage::helper('pure360_list')->getCustomerSegmentData($customer)));
-
-				$customerData = array_merge($customer->toArray(), $salesData, $groupData, $segmentData);
-
-				// Get date key lookup:
-				$dateKeyLookup = Mage::helper('pure360_list')->getDateKeyLookup();
-
-				foreach(Mage::helper('pure360_list')->getListKeys($list) as $key)
+				if($subscribe)
 				{
-					$val = '';
 
-					if(isset($customerData[$key]))
+
+					// Process Customer
+					$salesFields = Mage::helper('pure360_list')->getSalesFields($list);
+
+					$salesData = empty($salesFields) ? array() : Mage::helper('pure360_list')->getSalesData($customer, $salesFields);
+
+					$groupData = array('customer_group' =>
+						Mage::helper('pure360_common')->arrayToCsv(
+								Mage::helper('pure360_list')->getCustomerGroupData($customer)));
+
+					$segmentData = array('customer_segments' =>
+						Mage::helper('pure360_common')->arrayToCsv(
+								Mage::helper('pure360_list')->getCustomerSegmentData($customer)));
+
+					$customerData = array_merge($customer->toArray(), $salesData, $groupData, $segmentData);
+
+					// Get date key lookup:
+					$dateKeyLookup = Mage::helper('pure360_list')->getDateKeyLookup();
+
+					foreach(Mage::helper('pure360_list')->getListKeys($list) as $key)
 					{
-						$val = $customerData[$key];
-						if(!empty($val))
+						$val = '';
+
+						if(isset($customerData[$key]))
 						{
-							if(in_array($key, $dateKeyLookup))
+							$val = $customerData[$key];
+							if(!empty($val))
 							{
-								// Format to pure360 list date
-								$val = Mage::helper('pure360_list')->toDate($val);					
+								if(in_array($key, $dateKeyLookup))
+								{
+									// Format to pure360 list date
+									$val = Mage::helper('pure360_list')->toDate($val);					
+								}
 							}
 						}
+
+						$postFields .= '&' . $key . '=' . $val;
 					}
 
-					$postFields .= '&' . $key . '=' . $val;
-				}
+					if($list->getDoubleOptinEnabled() != 'y')
+					{
+						$postFields .= '&doubleOptin=false';
+					}
 
-				if($list->getDoubleOptinEnabled() != 'y')
+					$postFields .= '&signup_date=' . urlencode(Mage::helper('pure360_list')->toDate($date));
+					
+				} else
 				{
-					$postFields .= '&doubleOptin=false';
+					$postFields .= '&mode=OPTOUT';
 				}
-
-				$postFields .= '&signup_date=' . urlencode(Mage::helper('pure360_list')->toDate($date));
+					
 				$postFields .= '&email=' . urlencode($customer->getEmail());
 
 				// Do post

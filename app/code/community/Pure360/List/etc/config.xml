@@ -2,7 +2,7 @@
 <config>
 	<modules>
 		<Pure360_List>
-			<version>1.0.3</version>
+			<version>1.1.0</version>
 		</Pure360_List>
 	</modules>
 	<global>
@@ -27,6 +27,9 @@
 					<list>
 						<table>pure360_list</table>
 					</list>
+					<optout>
+						<table>pure360_optout</table>
+					</optout>
 					<field>
 						<table>pure360_list_field</table>
 					</field>
@@ -43,6 +46,11 @@
 					<customer>Pure360_List_Model_Customer</customer>
 				</rewrite>
 			</customer>
+			<subscriber>
+				<rewrite>
+					<customer>Pure360_List_Model_Subscriber</customer>
+				</rewrite>
+			</subscriber>
 		</models>
 		<resources>
 			<pure360_list_setup>

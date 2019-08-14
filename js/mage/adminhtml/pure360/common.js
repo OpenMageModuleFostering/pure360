@@ -57,7 +57,11 @@ Pure360.prototype =
 			this.password_marketing.onchange		= function(e) { return self.checkValidated('marketing'); };
 			this.username_transactional.onchange	= function(e) { return self.checkValidated('transactional'); };
 			this.password_transactional.onchange	= function(e) { return self.checkValidated('transactional'); };
-			this.url.onchange						= function(e) { return self.checkValidated('marketing') && self.checkValidated('transactional'); };
+            this.url.onchange						= function(e) {
+                var marketing = self.checkValidated('marketing');
+                var transactional = self.checkValidated('transactional')
+                return true;
+            };
 			
 			this.checkEnabled();
 			this.checkValidated('marketing');

@@ -91,10 +91,20 @@ class Pure360_Newsletter_Block_Checkout_Onepage_Newsletter extends Mage_Checkout
 			if($this->$methodName())
 			{
 				$action = 'show';
-				if($this->isSubscribed() || $this->isEnabledCheckedByDefault())
+				if(strtolower($method) == 'customer')
 				{
-					$checked = 'true';
-					$value = '1';
+					if($this->isSubscribed())
+					{
+						$checked = 'true';
+						$value = '1';
+					}
+				} else
+				{
+					if($this->isSubscribed() || $this->isEnabledCheckedByDefault())
+					{
+						$checked = 'true';
+						$value = '1';
+					}
 				}
 			}
 		}

@@ -135,7 +135,28 @@ class Pure360_Email_Model_Email_Message extends Mage_Core_Model_Email_Template
 		
 		$this->setUseAbsoluteLinks(true);
 		$text = $this->getProcessedTemplate($variables, true);
-		
+		$plainText = $text;
+
+		if(!$this->isPlain())
+		{
+
+			$searchPatterns = array(
+				'/<style.*>.*<\/style>/Usi',
+				'/<p.*>/Ui',
+				'/<\/p>/i',
+				'/<br.*\/?>/i',
+				'/<[^>]+>/Usi',
+			);
+			$replaceValues = array(
+				'',
+				"\r\n\r\n",
+				"\r\n",
+				"\r\n",
+				'',
+			);
+			$plainText = preg_replace($searchPatterns, $replaceValues, $plainText);
+		}
+
 		try
 		{
 			// Create API Client for current context
@@ -146,10 +167,11 @@ class Pure360_Email_Model_Email_Message extends Mage_Core_Model_Email_Template
 			$client				= Mage::helper('pure360_common/api')->getClient($url, $username, $password);
 			
 			// Send using Pure360 One2One
+			// Todo: allow modification of the plain text message. Currently, only stripping the tags out of the HTML message.
 			$messageSubject		= $this->getProcessedTemplateSubject($variables);
 			$messageName		= $templateId;
 			$messageBodyHtml	= $this->isPlain() ? null : $text; 
-			$messageBodyPlain	= $this->isPlain() ? $text : null;
+			$messageBodyPlain	= $this->isPlain() ? $text : $plainText;
 			$toAddress			= $variables['email'];
 			$fromAddress		= $this->getSenderEmail();
 			$fromDesc			= $this->getSenderName();
